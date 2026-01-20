@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
@@ -21,6 +22,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Moataz01\FilamentNotificationSound\FilamentNotificationSoundPlugin;
 use Stephenjude\FilamentTwoFactorAuthentication\TwoFactorAuthenticationPlugin;
@@ -60,6 +62,12 @@ class MakerPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->userMenuItems([
+                'profile' => Action::make('profile')
+                    ->label(fn() => auth()->user()->name)
+                    ->url(fn(): string => EditProfilePage::getUrl())
+                    ->icon('heroicon-m-user-circle'),
+            ])
             ->databaseNotifications()
             ->plugins([
                 FilamentUiSwitcherPlugin::make()
@@ -87,7 +95,7 @@ class MakerPanelProvider extends PanelProvider
                     ->shouldRegisterNavigation(false)
                     ->shouldShowEmailForm()
                     ->shouldShowDeleteAccountForm(false)
-                    ->shouldShowSanctumTokens()
+                    // ->shouldShowSanctumTokens()
                     ->shouldShowMultiFactorAuthentication()
                     ->shouldShowBrowserSessionsForm()
                     ->shouldShowAvatarForm(
