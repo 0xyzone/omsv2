@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('image_path')->nullable();
             $table->string('sku')->unique()->nullable();
             $table->decimal('price', 10, 2);
-            $table->integer('stock_quantity')->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_customizable')->default(false);
+            $table->decimal('customization_base_fee', 10, 2)->nullable();
             $table->timestamps();
         });
     }
