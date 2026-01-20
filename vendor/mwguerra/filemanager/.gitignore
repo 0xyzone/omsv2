@@ -1,6 +1,0 @@
-/vendor/
-/composer.lock
-/.phpunit.cache/
-/tests/coverage/
-/node_modules/
-/package-lock.json
