@@ -18,9 +18,17 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ShoppingCart;
+    protected static \UnitEnum|string|null $navigationGroup = 'Inventory Management';
+    protected static $sort = 2;
 
     protected static ?string $recordTitleAttribute = 'Product';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -43,8 +51,8 @@ class ProductResource extends Resource
     {
         return [
             'index' => ListProducts::route('/'),
-            'create' => CreateProduct::route('/create'),
-            'edit' => EditProduct::route('/{record}/edit'),
+            // 'create' => CreateProduct::route('/create'),
+            // 'edit' => EditProduct::route('/{record}/edit'),
         ];
     }
 }
