@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Stocks\Pages;
 
-use App\Filament\Resources\Stocks\StockResource;
+use App\Models\Material;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Stocks\StockResource;
 
 class ListStocks extends ListRecords
 {
@@ -13,7 +14,20 @@ class ListStocks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->after(function ($record) {
+                    // $record is the newly created Stock model instance
+                    $material = Material::find($record->material_id);
+
+                    if ($material) {
+                        if ($record->type === 'add') {
+                            $material->increment('stock_quantity', $record->quantity);
+                        } else {
+                            // Logic for 'subtract'
+                            $material->decrement('stock_quantity', $record->quantity);
+                        }
+                    }
+                }),
         ];
     }
 }

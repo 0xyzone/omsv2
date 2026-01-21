@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
+use Filament\Tables\Columns\ImageColumn;
 
 class UsersTable
 {
@@ -15,6 +16,9 @@ class UsersTable
     {
         return $table
             ->columns([
+                ImageColumn::make('avatar_url')
+                    ->circular()
+                    ->imageGallery(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
@@ -34,9 +38,6 @@ class UsersTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                ImageColumn::make('avatar_url')
-                    ->circular()
-                    ->imageGallery(),
                 TextColumn::make('locale')
                     ->searchable(),
                 TextColumn::make('theme_color')
@@ -46,6 +47,7 @@ class UsersTable
                 //
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

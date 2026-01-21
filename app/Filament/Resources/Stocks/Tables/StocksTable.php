@@ -24,7 +24,15 @@ class StocksTable
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('type')
-                    ->badge(),
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'add' => 'success',
+                        'subtract' => 'danger',
+                        default => 'secondary',
+                    })
+                    ->extraAttributes([
+                        'class' => 'capitalize',
+                    ]),
                 ImageColumn::make('image_path'),
                 TextColumn::make('created_at')
                     ->dateTime()

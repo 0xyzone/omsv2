@@ -2,16 +2,18 @@
 
 namespace App\Filament\Resources\Stocks\Schemas;
 
+use App\Models\Material;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+// Use v4 Schema components
+use Filament\Forms\Components\Textarea;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-// Use v4 Schema components
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Group;
-use Filament\Schemas\Schema;
 
 class StockForm
 {
@@ -88,7 +90,7 @@ class StockForm
                             ]),
                     ])
                     ->columnSpan(['lg' => 1]),
-                ]),
+                ])
             ]);
     }
 }

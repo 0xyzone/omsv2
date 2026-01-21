@@ -2,17 +2,19 @@
 
 namespace App\Filament\Resources\Stocks;
 
-use App\Filament\Resources\Stocks\Pages\CreateStock;
+use BackedEnum;
+use App\Models\Stock;
+use App\Models\Material;
+use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\Stocks\Pages\EditStock;
 use App\Filament\Resources\Stocks\Pages\ListStocks;
+use App\Filament\Resources\Stocks\Pages\CreateStock;
 use App\Filament\Resources\Stocks\Schemas\StockForm;
 use App\Filament\Resources\Stocks\Tables\StocksTable;
-use App\Models\Stock;
-use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 
 class StockResource extends Resource
 {

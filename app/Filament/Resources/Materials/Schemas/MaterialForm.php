@@ -48,10 +48,10 @@ class MaterialForm
                                     ->prefixIcon('heroicon-m-cube'),
                                 TextInput::make('unit_of_measure')
                                     ->prefixIcon('heroicon-m-beaker'),
-                                TextInput::make('cost_per_unit')
-                                    ->numeric()
-                                    ->prefix('Rs.')
-                                    ->columnSpanFull(),
+                                // TextInput::make('cost_per_unit')
+                                //     ->numeric()
+                                //     ->prefix('Rs.')
+                                //     ->columnSpanFull(),
                             ]),
                     ])
                     ->columnSpan(['lg' => 2]),

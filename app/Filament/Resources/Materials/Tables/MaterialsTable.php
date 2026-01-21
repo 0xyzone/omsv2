@@ -16,19 +16,21 @@ class MaterialsTable
     {
         return $table
             ->columns([
+                ImageColumn::make('image_path')
+                ->circular(),
                 TextColumn::make('name')
-                    ->searchable(),
+                ->searchable(),
                 TextColumn::make('stock_quantity')
                     ->numeric()
-                    ->sortable(),
-                TextColumn::make('unit_of_measure')
-                    ->searchable(),
-                TextColumn::make('cost_per_unit')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->getStateUsing(fn($record) => $record->stock_quantity . ' ' . $record->unit_of_measure),
+                // TextColumn::make('unit_of_measure')
+                //     ->searchable(),
+                // TextColumn::make('cost_per_unit')
+                //     ->numeric()
+                //     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
-                ImageColumn::make('image_path'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
