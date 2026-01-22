@@ -122,7 +122,7 @@ class MukhiyaPanelProvider extends PanelProvider
                     ->mobileFormPanelPosition('bottom')
                     ->formPanelBackgroundColor(Color::Slate, '800')
                     ->emptyPanelBackgroundImageOpacity('70%')
-                    ->emptyPanelBackgroundImageUrl('images/bg.jpg'),
+                    ->emptyPanelBackgroundImageUrl(asset('images/bg.jpg')),
                 TwoFactorAuthenticationPlugin::make()
                     ->enableTwoFactorAuthentication() // Enable Google 2FA
                     ->enablePasskeyAuthentication()
