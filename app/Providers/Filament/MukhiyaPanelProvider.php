@@ -127,9 +127,9 @@ class MukhiyaPanelProvider extends PanelProvider
                     ->enableTwoFactorAuthentication() // Enable Google 2FA
                     ->enablePasskeyAuthentication()
                     ->addTwoFactorMenuItem(), // Add 2FA menu item
-                FilamentEditEnvPlugin::make()
-                    ->showButton(fn() => auth()->user()->id === 1)
-                    ->setIcon('heroicon-o-cog'),
+                // FilamentEditEnvPlugin::make()
+                //     ->showButton(fn() => auth()->user()->id === 1)
+                //     ->setIcon('heroicon-o-cog'),
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')
                     ->setTitle('My Profile')
