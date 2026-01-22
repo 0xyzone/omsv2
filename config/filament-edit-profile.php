@@ -7,21 +7,36 @@ return [
     'disk' => env('FILESYSTEM_DISK', 'public'),
     'visibility' => 'public', // or replace by filesystem disk visibility with fallback value
     'show_custom_fields' => true,
-    // 'custom_fields' => [
-    //     'username' => [
-    //         'type' => 'text', // required
-    //         'label' => 'Username', // required
-    //         'placeholder' => 'Enter your username', // optional
-    //         'id' => 'username', // optional
-    //         'required' => true, // optional
-    //         'rules' => [], // optional
-    //         'hint_icon' => 'heroicon-o-information-circle', // optional
-    //         'hint' => 'Select something unique', // optional
-    //         'suffix_icon' => '', // optional
-    //         'prefix_icon' => '', // optional
-    //         'default' => '', // optional
-    //         'column_span' => 'full', // optional
-    //         'autocomplete' => false, // optional
-    //     ],
-    // ]
+    'custom_fields' => [
+        'primary_contact_number' => [
+            'type' => 'text', // required
+            'label' => 'Primary Contact Number', // required
+            'placeholder' => 'Enter your primary contact number', // optional
+            'id' => 'primary_contact_number', // optional
+            'required' => true, // optional
+            'rules' => [], // optional
+            'hint_icon' => '', // optional
+            'hint' => '', // optional
+            'suffix_icon' => '', // optional
+            'prefix_icon' => '', // optional
+            'default' => '', // optional
+            'column_span' => 'full', // optional
+            'autocomplete' => false, // optional
+        ],
+        'secondary_contact_number' => [
+            'type' => 'text', // required
+            'label' => 'Secondary Contact Number', // required
+            'placeholder' => 'Enter your secondary contact number', // optional
+            'id' => 'secondary_contact_number', // optional
+            'required' => false, // optional
+            'rules' => [], // optional
+            'hint_icon' => '', // optional
+            'hint' => '', // optional
+            'suffix_icon' => '', // optional
+            'prefix_icon' => '', // optional
+            'default' => '', // optional
+            'column_span' => 'full', // optional
+            'autocomplete' => false, // optional
+        ],
+    ]
 ];

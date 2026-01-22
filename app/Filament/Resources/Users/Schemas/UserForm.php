@@ -22,12 +22,12 @@ class UserForm
                     ->email()
                     ->required(),
                 TextInput::make('password')
-                    ->hiddenOn('edit')
+                    ->visibleOn('create')
                     ->password()
                     ->revealable()
                     ->required(),
                 TextInput::make('password_confirmation')
-                    ->hiddenOn('edit')
+                    ->visibleOn('create')
                     ->same('password')
                     ->dehydrated(false)
                     ->password()
