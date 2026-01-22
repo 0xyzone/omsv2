@@ -92,9 +92,9 @@ class MukhiyaPanelProvider extends PanelProvider
             ->plugins([
                 FilamentUiSwitcherPlugin::make()
                     ->withModeSwitcher(),
-                FileManagerPlugin::make([
-                    FileSystem::class,
-                ]),
+                // FileManagerPlugin::make([
+                //     FileSystem::class,
+                // ]),
                 FilamentNotificationSoundPlugin::make()
                     ->volume(1.0) // Volume (0.0 to 1.0)
                     ->showAnimation(true) // Show animation on notification badge

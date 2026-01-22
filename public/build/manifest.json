@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-CqjpHn8Y.css",
+    "file": "assets/app-lS64rB14.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -8,14 +8,22 @@
       "app.css"
     ]
   },
-  "resources/css/filament/mukhiya/theme.css": {
-    "file": "assets/theme-uPoKvvmP.css",
-    "src": "resources/css/filament/mukhiya/theme.css",
+  "resources/css/filament/maker/theme.css": {
+    "file": "assets/theme-BN0IqVQT.css",
+    "src": "resources/css/filament/maker/theme.css",
     "isEntry": true,
     "name": "theme",
     "names": [
       "theme.css"
     ]
+  },
+  "resources/css/filament/mukhiya/theme.css": {
+    "file": "assets/theme-DVNY60R3.css",
+    "src": "resources/css/filament/mukhiya/theme.css"
+  },
+  "resources/css/filament/taker/theme.css": {
+    "file": "assets/theme-CFqPk7Ix.css",
+    "src": "resources/css/filament/taker/theme.css"
   },
   "resources/js/app.js": {
     "file": "assets/app-CAiCLEjY.js",
