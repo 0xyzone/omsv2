@@ -38,6 +38,7 @@ class MakerPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->login()
             ->discoverResources(in: app_path('Filament/Maker/Resources'), for: 'App\Filament\Maker\Resources')
             ->discoverPages(in: app_path('Filament/Maker/Pages'), for: 'App\Filament\Maker\Pages')
             ->pages([
@@ -81,7 +82,7 @@ class MakerPanelProvider extends PanelProvider
                     ->mobileFormPanelPosition('bottom')
                     ->formPanelBackgroundColor(Color::Slate, '800')
                     ->emptyPanelBackgroundImageOpacity('70%')
-                    ->emptyPanelBackgroundImageUrl('https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
+                    ->emptyPanelBackgroundImageUrl(asset('images/bg.jpg')),
                 TwoFactorAuthenticationPlugin::make()
                     ->enableTwoFactorAuthentication() // Enable Google 2FA
                     ->enablePasskeyAuthentication()

@@ -36,8 +36,9 @@ class TakerPanelProvider extends PanelProvider
             ->path('taker')
             ->viteTheme('resources/css/filament/taker/theme.css')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Emerald,
             ])
+            ->login()
             ->discoverResources(in: app_path('Filament/Taker/Resources'), for: 'App\Filament\Taker\Resources')
             ->discoverPages(in: app_path('Filament/Taker/Pages'), for: 'App\Filament\Taker\Pages')
             ->pages([
@@ -81,7 +82,7 @@ class TakerPanelProvider extends PanelProvider
                     ->mobileFormPanelPosition('bottom')
                     ->formPanelBackgroundColor(Color::Slate, '800')
                     ->emptyPanelBackgroundImageOpacity('70%')
-                    ->emptyPanelBackgroundImageUrl('https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
+                    ->emptyPanelBackgroundImageUrl(asset('images/bg.jpg')),
                 TwoFactorAuthenticationPlugin::make()
                     ->enableTwoFactorAuthentication() // Enable Google 2FA
                     ->enablePasskeyAuthentication()

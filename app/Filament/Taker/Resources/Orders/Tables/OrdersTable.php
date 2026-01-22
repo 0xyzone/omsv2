@@ -1,40 +1,48 @@
 <?php
 
-namespace App\Filament\Resources\Stocks\Tables;
+namespace App\Filament\Taker\Resources\Orders\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class StocksTable
+class OrdersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('image_path'),
-                TextColumn::make('date')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('material.name')
+                TextColumn::make('user.name')
                     ->searchable(),
-                TextColumn::make('quantity')
+                TextColumn::make('customer_name')
+                    ->searchable(),
+                TextColumn::make('customer_phone')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('balance'),
-                TextColumn::make('type')
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'add' => 'success',
-                        'subtract' => 'danger',
-                        default => 'secondary',
-                    })
-                    ->extraAttributes([
-                        'class' => 'capitalize',
-                    ]),
+                TextColumn::make('customer_alt_phone')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->searchable(),
+                TextColumn::make('total_amount')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('customization_amount')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('discount_type')
+                    ->searchable(),
+                TextColumn::make('discount_value')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('discount_amount')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('final_amount')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

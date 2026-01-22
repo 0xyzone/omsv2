@@ -25,72 +25,86 @@ class StockForm
                     'default' => 1,
                     'lg' => 3,
                 ])
-                ->columnSpanFull() // Keeps the grid contained as per your preference
-                ->schema([
-                    
-                    // Left Column: Transaction Details (2/3 width)
-                    Group::make([
-                        Section::make('Stock Movement')
-                            ->description('Record whether you are adding or removing inventory.')
-                            ->icon('heroicon-m-arrows-right-left')
-                            ->columns(2)
-                            ->schema([
-                                Select::make('material_id')
-                                    ->relationship('material', 'name')
-                                    ->searchable()
-                                    ->preload()
-                                    ->required()
-                                    ->columnSpanFull(),
+                    ->columnSpanFull() // Keeps the grid contained as per your preference
+                    ->schema([
 
-                                Select::make('type')
-                                    ->label('Transaction Type')
-                                    ->options([
-                                        'add' => 'Stock In (Add)',
-                                        'subtract' => 'Stock Out (Subtract)',
-                                    ])
-                                    ->default('add')
-                                    ->required()
-                                    ->selectablePlaceholder(false)
-                                    ->native(false), // Better UI look
+                        // Left Column: Transaction Details (2/3 width)
+                        Group::make([
+                            Section::make('Stock Movement')
+                                ->description('Record whether you are adding or removing inventory.')
+                                ->icon('heroicon-m-arrows-right-left')
+                                ->columns(2)
+                                ->schema([
+                                    Select::make('material_id')
+                                        ->relationship('material', 'name')
+                                        ->searchable()
+                                        ->preload()
+                                        ->required()
+                                        ->columnSpanFull(),
 
-                                TextInput::make('quantity')
-                                    ->label('Quantity Amount')
-                                    ->required()
-                                    ->numeric()
-                                    ->minValue(1)
-                                    ->prefixIcon('heroicon-m-hashtag'),
+                                    Select::make('type')
+                                        ->label('Transaction Type')
+                                        ->options([
+                                            'add' => 'Stock In (Add)',
+                                            'subtract' => 'Stock Out (Subtract)',
+                                        ])
+                                        ->default('add')
+                                        ->required()
+                                        ->selectablePlaceholder(false)
+                                        ->native(false), // Better UI look
 
-                                DatePicker::make('date')
-                                    ->label('Transaction Date')
-                                    ->default(now())
-                                    ->required()
-                                    ->columnSpanFull(),
-                            ]),
+                                    TextInput::make('quantity')
+                                        ->label('Quantity Amount')
+                                        ->required()
+                                        ->numeric()
+                                        ->minValue(1)
+                                        ->prefixIcon('heroicon-m-hashtag'),
 
-                        Section::make('Additional Information')
-                            ->schema([
-                                Textarea::make('notes')
-                                    ->placeholder('Reason for adjustment, purchase order number, etc...')
-                                    ->rows(3),
-                            ])
-                            ->collapsible(),
+                                    DatePicker::make('date')
+                                        ->label('Transaction Date')
+                                        ->default(now())
+                                        ->required()
+                                        ->columnSpanFull(),
+                                ]),
+
+                            Section::make('Additional Information')
+                                ->schema([
+                                    Textarea::make('notes')
+                                        ->placeholder('Reason for adjustment, purchase order number, etc...')
+                                        ->rows(3),
+                                ])
+                                ->collapsible(),
+                        ])
+                            ->columnSpan(['lg' => 2]),
+
+                        // Right Column: Proof/Media (1/3 width)
+                        Group::make([
+                            Section::make('Documentation')
+                                ->description('Upload receipts or photos of the stock.')
+                                ->schema([
+                                    FileUpload::make('image_path')
+                                        ->label('Reference Image')
+                                        ->image()
+                                        ->imageEditor()
+                                        ->directory('stock-movements'),
+                                ]),
+                        ])
+                            ->columnSpan(['lg' => 1]),
+                        TextInput::make('balance')
+                            ->hidden()
+                            ->default(function (Model $record = null, array $data = []) {
+                                $materialId = $data['material_id'] ?? $record?->material_id;
+                                $quantity = $data['quantity'] ?? $record?->quantity;
+                                $type = $data['type'] ?? $record?->type;
+                                // Calculate balance based on type and quantity
+                                if ($type === 'add') {
+                                    return $quantity;
+                                } elseif ($type === 'subtract') {
+                                    return -$quantity;
+                                }
+                                return 0;
+                            })
                     ])
-                    ->columnSpan(['lg' => 2]),
-
-                    // Right Column: Proof/Media (1/3 width)
-                    Group::make([
-                        Section::make('Documentation')
-                            ->description('Upload receipts or photos of the stock.')
-                            ->schema([
-                                FileUpload::make('image_path')
-                                    ->label('Reference Image')
-                                    ->image()
-                                    ->imageEditor()
-                                    ->directory('stock-movements'),
-                            ]),
-                    ])
-                    ->columnSpan(['lg' => 1]),
-                ])
             ]);
     }
 }

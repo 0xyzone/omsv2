@@ -1,0 +1,247 @@
+<?php
+
+namespace App\Filament\Taker\Resources\Orders\Schemas;
+
+use App\Models\Product;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Split;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
+// Correct Layout Imports for Filament 4.x
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\FileUpload;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+
+class OrderForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Hidden::make('user_id')
+                    ->default(auth()->id())
+                    ->required(),
+                Flex::make([
+                    Section::make('Order Status')
+                        ->hiddenOn('create')
+                        ->schema([
+                            Select::make('status')
+                                ->options([
+                                    'pending' => 'Pending',
+                                    'processing' => 'Processing',
+                                    'processed' => 'Processed',
+                                    'packing' => 'Packing',
+                                    'packed' => 'Packed',
+                                    'out_for_delivery' => 'Out for Delivery',
+                                    'returning' => 'Returning',
+                                    'returned' => 'Returned',
+                                    'completed' => 'Completed',
+                                    'cancelled' => 'Cancelled',
+                                ])
+                                ->required()
+                                ->default('pending')
+                                ->native(false),
+                        ]),
+
+                    Section::make('Customer Information')
+                        ->description('Basic contact and delivery details.')
+                        ->icon('heroicon-m-user-circle')
+                        ->columns(2)
+                        ->schema([
+                            TextInput::make('customer_name')
+                                ->required()
+                                ->placeholder('Full Name')
+                                ->columnSpanFull(),
+                            TextInput::make('customer_phone')
+                                ->label('Primary Phone')
+                                ->tel()
+                                ->required()
+                                ->numeric()
+                                ->prefixIcon('heroicon-m-phone'),
+                            TextInput::make('customer_alt_phone')
+                                ->label('Secondary Phone')
+                                ->tel()
+                                ->numeric()
+                                ->prefixIcon('heroicon-m-phone-arrow-up-right'),
+                            Textarea::make('customer_address')
+                                ->label('Delivery Address')
+                                ->required()
+                                ->autosize()
+                                ->columnSpanFull()
+                                ->rows(3),
+                        ]),
+
+                    Section::make('Financial Summary')
+                        ->icon('heroicon-m-calculator')
+                        ->columns(2)
+                        ->schema([
+                            TextInput::make('total_amount')
+                                ->label('Items Total')
+                                ->prefix('Rs.')
+                                ->dehydrated()
+                                ->disabled(),
+
+                            TextInput::make('customization_amount')
+                                ->label('Customization Fee')
+                                ->numeric()
+                                ->prefix('Rs.')
+                                ->default(0.0)
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+
+                            Select::make('discount_type')
+                                ->options([
+                                    'percentage' => 'Percentage (%)',
+                                    'fixed' => 'Fixed Amount',
+                                    'none' => 'No Discount',
+                                ])
+                                ->live()
+                                ->default('none')
+                                ->native(false)
+                                ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+
+                            TextInput::make('discount_value')
+                                ->visible(fn(Get $get) => $get('discount_type') !== 'none')
+                                ->numeric()
+                                ->label(fn(Get $get) => $get('discount_type') === 'percentage' ? 'Rate (%)' : 'Amount')
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+
+                            TextInput::make('discount_amount')
+                                ->label('Discount Applied')
+                                ->prefix('Rs.')
+                                ->dehydrated()
+                                ->disabled()
+                                ->numeric(),
+
+                            TextInput::make('final_amount')
+                                ->label('Grand Total')
+                                ->prefix('Rs.')
+                                ->extraInputAttributes(['style' => 'font-weight: bold; font-size: 1.2rem;'])
+                                ->dehydrated()
+                                ->disabled()
+                                ->required(),
+                        ]),
+                ])
+                ->grow(false)
+                ->columnSpanFull(),
+                // Main Content Area (Left/Center)
+                Grid::make(1)
+                    ->schema([
+                        Section::make('Order Items')
+                            ->description('Add products and manage customizations.')
+                            ->icon('heroicon-m-shopping-cart')
+                            ->schema([
+                                Repeater::make('order_items')
+                                    ->relationship('orderItems')
+                                    ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set))
+                                    ->schema([
+                                        Grid::make(3)
+                                            ->schema([
+                                                Select::make('product_id')
+                                                    ->relationship('product', 'name')
+                                                    ->searchable()
+                                                    ->preload()
+                                                    ->reactive()
+                                                    ->required()
+                                                    ->columnSpan(2)
+                                                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                                                        $product = Product::find($state);
+                                                        if ($product) {
+                                                            $set('price', $product->price);
+                                                            $set('total', $product->price * ($get('quantity') ?? 0));
+                                                        } else {
+                                                            $set('price', 0);
+                                                        }
+                                                    }),
+                                                TextInput::make('quantity')
+                                                    ->hidden(fn(Get $get) => $get('product_id') == null)
+                                                    ->required()
+                                                    ->numeric()
+                                                    ->live(onBlur: true)
+                                                    ->default(1)
+                                                    ->prefixIcon('heroicon-m-hashtag')
+                                                    ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+                                            ]),
+
+                                        Grid::make(2)
+                                            ->schema([
+                                                Select::make('is_customizable')
+                                                    ->label('Customizable?')
+                                                    ->options([1 => 'Yes', 0 => 'No'])
+                                                    ->required()
+                                                    ->default(0)
+                                                    ->live()
+                                                    ->native(false),
+                                                TextInput::make('total')
+                                                    ->label('Sub-total')
+                                                    ->prefix('Rs.')
+                                                    ->dehydrated()
+                                                    ->disabled(),
+                                            ]),
+
+                                        Group::make([
+                                            Textarea::make('customization_details')
+                                                ->placeholder('Specific instructions for this item...')
+                                                ->autosize(),
+                                            FileUpload::make('images')
+                                                ->multiple()
+                                                ->image()
+                                                ->imageEditor()
+                                                ->directory('order_item_customizations')
+                                                ->panelLayout('integrated'),
+                                        ])->hidden(fn(Get $get) => $get('is_customizable') == 0),
+
+                                        Textarea::make('notes')
+                                            ->label('Item Notes')
+                                            ->placeholder('Internal notes for this product...')
+                                            ->rows(2),
+
+                                        Hidden::make('price')->dehydrated(),
+                                    ])
+                                    ->collapsible()
+                                    ->cloneable()
+                                    ->itemLabel(fn(array $state): ?string => Product::find($state['product_id'])?->name ?? 'New Item')
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpanFull(),
+                    ])->grow(true),
+
+                // Sidebar Area (Right)
+            ]);
+    }
+
+    protected static function calculateFinalAmount(Get $get, Set $set): void
+    {
+        $repeaterItems = $get('order_items') ?? $get('../../order_items') ?? [];
+        $totalAmount = 0;
+
+        foreach ($repeaterItems as $item) {
+            $prodectId = $item['product_id'] ?? null;
+            $price = Product::find($prodectId)?->price ?? 0;
+            $quantity = (float) ($item['quantity'] ?? 0);
+            $totalAmount += $price * $quantity;
+        }
+        $customizationAmount = (float) ($get('customization_amount') ?? 0);
+        $discountType = $get('discount_type') ?? 'none';
+        $discountValue = (float) ($get('discount_value') ?? 0);
+        $discountAmount = 0;
+        if ($discountType === 'percentage' && $discountValue > 0) {
+            $discountAmount = ($totalAmount + $customizationAmount) * ($discountValue / 100);
+        } elseif ($discountType === 'fixed' && $discountValue > 0) {
+            $discountAmount = $discountValue;
+        }
+        $set('discount_amount', $discountAmount);
+        $set('total_amount', $totalAmount);
+
+        $finalAmount = $totalAmount + $customizationAmount - $discountAmount;
+        $set('final_amount', $finalAmount >= 0 ? $finalAmount : 0);
+    }
+}

@@ -1,40 +1,29 @@
 <?php
 
-namespace App\Filament\Resources\Stocks\Tables;
+namespace App\Filament\Resources\Encashments\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class StocksTable
+class EncashmentsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('image_path'),
-                TextColumn::make('date')
+                TextColumn::make('encashment_date')
                     ->date()
                     ->sortable(),
-                TextColumn::make('material.name')
+                TextColumn::make('user.name')
                     ->searchable(),
-                TextColumn::make('quantity')
+                TextColumn::make('amount')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('balance'),
-                TextColumn::make('type')
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'add' => 'success',
-                        'subtract' => 'danger',
-                        default => 'secondary',
-                    })
-                    ->extraAttributes([
-                        'class' => 'capitalize',
-                    ]),
+                TextColumn::make('status')
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

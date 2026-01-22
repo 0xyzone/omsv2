@@ -2,26 +2,26 @@
 
 namespace App\Models;
 
-use App\Models\Category;
+use App\Models\User;
 use App\Models\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Product extends Model
+class Order extends Model
 {
     /**
-     * Get the category that owns the Product
+     * Get the user that owns the Order
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function category(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
-     * Get all of the orderItems for the Product
+     * Get all of the order_items for the Order
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

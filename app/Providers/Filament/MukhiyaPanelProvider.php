@@ -49,7 +49,7 @@ class MukhiyaPanelProvider extends PanelProvider
             ->emailVerification()
             ->registration()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Sky,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -105,7 +105,7 @@ class MukhiyaPanelProvider extends PanelProvider
                     ->mobileFormPanelPosition('bottom')
                     ->formPanelBackgroundColor(Color::Slate, '800')
                     ->emptyPanelBackgroundImageOpacity('70%')
-                    ->emptyPanelBackgroundImageUrl('https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
+                    ->emptyPanelBackgroundImageUrl('images/bg.jpg'),
                 TwoFactorAuthenticationPlugin::make()
                     ->enableTwoFactorAuthentication() // Enable Google 2FA
                     ->enablePasskeyAuthentication()

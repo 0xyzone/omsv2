@@ -22,9 +22,13 @@ class ListStocks extends ListRecords
                     if ($material) {
                         if ($record->type === 'add') {
                             $material->increment('stock_quantity', $record->quantity);
+                            $record->balance = $material->stock_quantity;
+                            $record->save();
                         } else {
                             // Logic for 'subtract'
                             $material->decrement('stock_quantity', $record->quantity);
+                            $record->balance = $material->stock_quantity;
+                            $record->save();
                         }
                     }
                 }),
