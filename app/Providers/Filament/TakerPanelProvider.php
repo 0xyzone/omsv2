@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use Filament\Panel;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\PanelProvider;
 use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
@@ -71,6 +72,7 @@ class TakerPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->plugins([
+                FilamentShieldPlugin::make(),
                 FilamentUiSwitcherPlugin::make()
                     ->withModeSwitcher(),
                 FilamentNotificationSoundPlugin::make()

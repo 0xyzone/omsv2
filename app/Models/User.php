@@ -16,13 +16,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys;
 use Andreia\FilamentUiSwitcher\Models\Traits\HasUiPreferences;
 use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
+use Spatie\Permission\Traits\HasRoles;
 use Stephenjude\FilamentTwoFactorAuthentication\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements FilamentUser, HasPasskeys, HasAvatar, MustVerifyEmail
 {
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasUiPreferences, InteractsWithPasskeys, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, Notifiable, HasUiPreferences, InteractsWithPasskeys, TwoFactorAuthenticatable, HasRoles;
 
     public function getFilamentAvatarUrl(): ?string
     {
@@ -68,7 +69,15 @@ class User extends Authenticatable implements FilamentUser, HasPasskeys, HasAvat
 
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
-        return true;
+        if ($panel->getId() === 'mukhiya') {
+            return $this->hasRole('super_admin');
+        } elseif ($panel->getId() === 'taker') {
+            return $this->hasRole(['taker', 'super_admin']);
+        } elseif ($panel->getId() === 'maker') {
+            return $this->hasRole(['maker']);
+        } else {
+            return false;
+        }
     }
 
     /**
