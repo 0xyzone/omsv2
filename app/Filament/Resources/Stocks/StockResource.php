@@ -20,8 +20,8 @@ class StockResource extends Resource
 {
     protected static ?string $model = Stock::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxStack;
-    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::InboxStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowTrendingUp;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ArrowTrendingUp;
     protected static \UnitEnum|string|null $navigationGroup = 'Stock Management';
     protected static $sort = 2;
 

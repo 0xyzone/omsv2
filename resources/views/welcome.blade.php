@@ -92,7 +92,7 @@
         }
     </style>
 </head>
-<body>
+<body class="overflow-auto">
 
     <div class="bg-mesh"></div>
 

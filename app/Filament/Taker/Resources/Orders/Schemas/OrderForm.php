@@ -29,54 +29,57 @@ class OrderForm
                     ->default(auth()->id())
                     ->required(),
                 Flex::make([
-                    Section::make('Order Status')
-                        ->hiddenOn('create')
-                        ->schema([
-                            Select::make('status')
-                                ->options([
-                                    'pending' => 'Pending',
-                                    'processing' => 'Processing',
-                                    'processed' => 'Processed',
-                                    'packing' => 'Packing',
-                                    'packed' => 'Packed',
-                                    'out_for_delivery' => 'Out for Delivery',
-                                    'returning' => 'Returning',
-                                    'returned' => 'Returned',
-                                    'completed' => 'Completed',
-                                    'cancelled' => 'Cancelled',
-                                ])
-                                ->required()
-                                ->default('pending')
-                                ->native(false),
-                        ]),
+                    Group::make([
+                        Section::make('Order Status')
+                            ->hiddenOn('create')
+                            ->schema([
+                                Select::make('status')
+                                    ->options([
+                                        'pending' => 'Pending',
+                                        'confirmed' => 'Confirmed',
+                                        'processing' => 'Processing',
+                                        'processed' => 'Processed',
+                                        'packing' => 'Packing',
+                                        'packed' => 'Packed',
+                                        'out_for_delivery' => 'Out for Delivery',
+                                        'returning' => 'Returning',
+                                        'returned' => 'Returned',
+                                        'completed' => 'Completed',
+                                        'cancelled' => 'Cancelled',
+                                    ])
+                                    ->required()
+                                    ->default('pending')
+                                    ->native(false),
+                            ]),
 
-                    Section::make('Customer Information')
-                        ->description('Basic contact and delivery details.')
-                        ->icon('heroicon-m-user-circle')
-                        ->columns(2)
-                        ->schema([
-                            TextInput::make('customer_name')
-                                ->required()
-                                ->placeholder('Full Name')
-                                ->columnSpanFull(),
-                            TextInput::make('customer_phone')
-                                ->label('Primary Phone')
-                                ->tel()
-                                ->required()
-                                ->numeric()
-                                ->prefixIcon('heroicon-m-phone'),
-                            TextInput::make('customer_alt_phone')
-                                ->label('Secondary Phone')
-                                ->tel()
-                                ->numeric()
-                                ->prefixIcon('heroicon-m-phone-arrow-up-right'),
-                            Textarea::make('customer_address')
-                                ->label('Delivery Address')
-                                ->required()
-                                ->autosize()
-                                ->columnSpanFull()
-                                ->rows(3),
-                        ]),
+                        Section::make('Customer Information')
+                            ->description('Basic contact and delivery details.')
+                            ->icon('heroicon-m-user-circle')
+                            ->columns(2)
+                            ->schema([
+                                TextInput::make('customer_name')
+                                    ->required()
+                                    ->placeholder('Full Name')
+                                    ->columnSpanFull(),
+                                TextInput::make('customer_phone')
+                                    ->label('Primary Phone')
+                                    ->tel()
+                                    ->required()
+                                    ->numeric()
+                                    ->prefixIcon('heroicon-m-phone'),
+                                TextInput::make('customer_alt_phone')
+                                    ->label('Secondary Phone')
+                                    ->tel()
+                                    ->numeric()
+                                    ->prefixIcon('heroicon-m-phone-arrow-up-right'),
+                                Textarea::make('customer_address')
+                                    ->label('Delivery Address')
+                                    ->required()
+                                    ->autosize()
+                                    ->columnSpanFull()
+                                    ->rows(3),
+                            ]),
+                    ]),
 
                     Section::make('Financial Summary')
                         ->icon('heroicon-m-calculator')
@@ -130,8 +133,8 @@ class OrderForm
                                 ->required(),
                         ]),
                 ])
-                ->grow(false)
-                ->columnSpanFull(),
+                    ->grow(false)
+                    ->columnSpanFull(),
                 // Main Content Area (Left/Center)
                 Grid::make(1)
                     ->schema([
@@ -175,9 +178,12 @@ class OrderForm
                                             ->schema([
                                                 Select::make('is_customizable')
                                                     ->label('Customizable?')
-                                                    ->options([1 => 'Yes', 0 => 'No'])
+                                                    ->options([
+                                                        TRUE => 'Yes',
+                                                        FALSE => 'No'
+                                                    ])
                                                     ->required()
-                                                    ->default(0)
+                                                    ->default(FALSE)
                                                     ->live()
                                                     ->native(false),
                                                 TextInput::make('total')
@@ -197,7 +203,7 @@ class OrderForm
                                                 ->imageEditor()
                                                 ->directory('order_item_customizations')
                                                 ->panelLayout('integrated'),
-                                        ])->hidden(fn(Get $get) => $get('is_customizable') == 0),
+                                        ])->hidden(fn(Get $get) => $get('is_customizable') == FALSE),
 
                                         Textarea::make('notes')
                                             ->label('Item Notes')
@@ -212,7 +218,9 @@ class OrderForm
                                     ->columnSpanFull(),
                             ])
                             ->columnSpanFull(),
-                    ])->grow(true),
+                    ])
+                    ->grow(true)
+                    ->columnSpanFull(),
 
                 // Sidebar Area (Right)
             ]);

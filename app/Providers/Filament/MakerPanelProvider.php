@@ -15,6 +15,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use App\Filament\Taker\Resources\Orders\OrderResource;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Andreia\FilamentUiSwitcher\FilamentUiSwitcherPlugin;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -43,6 +44,9 @@ class MakerPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Maker/Pages'), for: 'App\Filament\Maker\Pages')
             ->pages([
                 Dashboard::class,
+            ])
+            ->resources([
+                OrderResource::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Maker/Widgets'), for: 'App\Filament\Maker\Widgets')
             ->widgets([

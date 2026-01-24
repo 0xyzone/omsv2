@@ -72,7 +72,6 @@ class TakerPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->plugins([
-                FilamentShieldPlugin::make(),
                 FilamentUiSwitcherPlugin::make()
                     ->withModeSwitcher(),
                 FilamentNotificationSoundPlugin::make()
