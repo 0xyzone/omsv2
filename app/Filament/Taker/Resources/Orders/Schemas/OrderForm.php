@@ -2,17 +2,19 @@
 
 namespace App\Filament\Taker\Resources\Orders\Schemas;
 
+use Filament\Panel;
 use App\Models\Product;
 use Filament\Schemas\Schema;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Split;
+// Correct Layout Imports for Filament 4.x
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
-// Correct Layout Imports for Filament 4.x
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\FileUpload;
@@ -28,7 +30,8 @@ class OrderForm
                 Hidden::make('user_id')
                     ->default(auth()->id())
                     ->required(),
-                Flex::make([
+                Grid::make(2)
+                    ->schema([
                     Group::make([
                         Section::make('Order Status')
                             ->hiddenOn('create')
@@ -79,22 +82,25 @@ class OrderForm
                                     ->columnSpanFull()
                                     ->rows(3),
                             ]),
-                    ]),
+                    ])
+                    ->columnSpan(2),
 
                     Section::make('Financial Summary')
                         ->icon('heroicon-m-calculator')
-                        ->columns(2)
+                        ->columns(1)
                         ->schema([
                             TextInput::make('total_amount')
                                 ->label('Items Total')
-                                ->prefix('Rs.')
+                                ->prefix('रु. ')
                                 ->dehydrated()
                                 ->disabled(),
 
                             TextInput::make('customization_amount')
                                 ->label('Customization Fee')
                                 ->numeric()
-                                ->prefix('Rs.')
+                                ->disabled()
+                                ->dehydrated()
+                                ->prefix('रु. ')
                                 ->default(0.0)
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
@@ -105,6 +111,7 @@ class OrderForm
                                     'fixed' => 'Fixed Amount',
                                     'none' => 'No Discount',
                                 ])
+                                ->disablePlaceholderSelection()
                                 ->live()
                                 ->default('none')
                                 ->native(false)
@@ -119,14 +126,14 @@ class OrderForm
 
                             TextInput::make('discount_amount')
                                 ->label('Discount Applied')
-                                ->prefix('Rs.')
+                                ->prefix('रु. ')
                                 ->dehydrated()
                                 ->disabled()
                                 ->numeric(),
 
                             TextInput::make('final_amount')
                                 ->label('Grand Total')
-                                ->prefix('Rs.')
+                                ->prefix('रु. ')
                                 ->extraInputAttributes(['style' => 'font-weight: bold; font-size: 1.2rem;'])
                                 ->dehydrated()
                                 ->disabled()
@@ -134,7 +141,11 @@ class OrderForm
                         ]),
                 ])
                     ->grow(false)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->columns(3)
+                    ->hidden(function () {
+                        return Filament::getCurrentPanel()?->getId() === 'maker';
+                    }),
                 // Main Content Area (Left/Center)
                 Grid::make(1)
                     ->schema([
@@ -154,7 +165,6 @@ class OrderForm
                                                     ->preload()
                                                     ->reactive()
                                                     ->required()
-                                                    ->columnSpan(2)
                                                     ->afterStateUpdated(function (Get $get, Set $set, $state) {
                                                         $product = Product::find($state);
                                                         if ($product) {
@@ -171,10 +181,22 @@ class OrderForm
                                                     ->live(onBlur: true)
                                                     ->default(1)
                                                     ->prefixIcon('heroicon-m-hashtag')
-                                                    ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+                                                    ->afterStateUpdated(function (Set $set, Get $get) {
+                                                        $price = $get('price') ?? 0; // Ensure price is loaded
+                                                        $quantity = $get('quantity') ?? 0;
+                                                        $set('total', $price * $quantity);
+                                                        static::calculateFinalAmount($get, $set);
+                                                    }),
+                                                TextInput::make('total')
+                                                    ->hidden(fn(Get $get) => $get('product_id') == null)
+                                                    ->label('Sub-total')
+                                                    ->prefix('रु. ')
+                                                    ->dehydrated()
+                                                    ->disabled(),
                                             ]),
 
                                         Grid::make(2)
+                                            ->hidden(fn(Get $get) => $get('product_id') == null)
                                             ->schema([
                                                 Select::make('is_customizable')
                                                     ->label('Customizable?')
@@ -185,12 +207,18 @@ class OrderForm
                                                     ->required()
                                                     ->default(FALSE)
                                                     ->live()
+                                                    ->disablePlaceholderSelection()
                                                     ->native(false),
-                                                TextInput::make('total')
-                                                    ->label('Sub-total')
-                                                    ->prefix('Rs.')
-                                                    ->dehydrated()
-                                                    ->disabled(),
+                                                TextInput::make('customization_rate')
+                                                    ->label('Customization Rate')
+                                                    ->prefix('रु. ')
+                                                    ->numeric()
+                                                    ->live(onBlur: true)
+                                                    ->default(0)
+                                                    ->afterStateUpdated(function (Set $set, Get $get) {
+                                                        static::calculateFinalAmount($get, $set);
+                                                    })
+                                                    ->hidden(fn(Get $get) => $get('is_customizable') == FALSE),
                                             ]),
 
                                         Group::make([
@@ -214,7 +242,7 @@ class OrderForm
                                     ])
                                     ->collapsible()
                                     ->cloneable()
-                                    ->itemLabel(fn(array $state): ?string => Product::find($state['product_id'])?->name ?? 'New Item')
+                                    ->itemLabel(fn(array $state): ?string => Product::find($state['product_id']) ? Product::find($state['product_id'])->name . ' - रु.' . $state['price'] : 'New Item')
                                     ->columnSpanFull(),
                             ])
                             ->columnSpanFull(),
@@ -230,14 +258,17 @@ class OrderForm
     {
         $repeaterItems = $get('order_items') ?? $get('../../order_items') ?? [];
         $totalAmount = 0;
+        $totalCustomizationRate = 0;
 
         foreach ($repeaterItems as $item) {
             $prodectId = $item['product_id'] ?? null;
             $price = Product::find($prodectId)?->price ?? 0;
             $quantity = (float) ($item['quantity'] ?? 0);
+            $customizationRate = (float) ($item['customization_rate'] ?? 0);
             $totalAmount += $price * $quantity;
+            $totalCustomizationRate += ($quantity * $customizationRate) ?? 0;
         }
-        $customizationAmount = (float) ($get('customization_amount') ?? 0);
+        $customizationAmount = $totalCustomizationRate;
         $discountType = $get('discount_type') ?? 'none';
         $discountValue = (float) ($get('discount_value') ?? 0);
         $discountAmount = 0;
@@ -248,6 +279,7 @@ class OrderForm
         }
         $set('discount_amount', $discountAmount);
         $set('total_amount', $totalAmount);
+        $set('customization_amount', $customizationAmount);
 
         $finalAmount = $totalAmount + $customizationAmount - $discountAmount;
         $set('final_amount', $finalAmount >= 0 ? $finalAmount : 0);

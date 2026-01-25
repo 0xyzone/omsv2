@@ -75,6 +75,8 @@ class User extends Authenticatable implements FilamentUser, HasPasskeys, HasAvat
             return $this->hasRole(['taker', 'super_admin']);
         } elseif ($panel->getId() === 'maker') {
             return $this->hasRole(['maker', 'super_admin']);
+        } elseif ($panel->getId() === 'packer') {
+            return $this->hasRole(['packer', 'super_admin']);
         } else {
             return false;
         }

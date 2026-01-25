@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use Filament\Panel;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\PanelProvider;
 use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
@@ -15,6 +14,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Andreia\FilamentUiSwitcher\FilamentUiSwitcherPlugin;
@@ -26,6 +26,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Moataz01\FilamentNotificationSound\FilamentNotificationSoundPlugin;
+use WatheqAlshowaiter\FilamentStickyTableHeader\StickyTableHeaderPlugin;
 use Stephenjude\FilamentTwoFactorAuthentication\TwoFactorAuthenticationPlugin;
 
 class TakerPanelProvider extends PanelProvider
@@ -40,15 +41,18 @@ class TakerPanelProvider extends PanelProvider
                 'primary' => Color::Emerald,
             ])
             ->login()
+            ->passwordReset()
+            ->emailChangeVerification()
+            ->emailVerification()
             ->discoverResources(in: app_path('Filament/Taker/Resources'), for: 'App\Filament\Taker\Resources')
             ->discoverPages(in: app_path('Filament/Taker/Pages'), for: 'App\Filament\Taker\Pages')
             ->pages([
                 Dashboard::class,
             ])
+            ->globalSearch(false)
             ->discoverWidgets(in: app_path('Filament/Taker/Widgets'), for: 'App\Filament\Taker\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -106,6 +110,7 @@ class TakerPanelProvider extends PanelProvider
                         rules: 'mimes:jpeg,png|max:2048' //only accept jpeg and png files with a maximum size of 2MB
                     ),
                 FilamentApexChartsPlugin::make(),
+                StickyTableHeaderPlugin::make(),
             ]);
     }
 }

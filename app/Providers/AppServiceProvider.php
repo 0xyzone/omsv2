@@ -24,8 +24,11 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
-            ->modalHeading('Available Panels')
-            ->simple();
+                ->modalHeading('Available Panels')
+                ->simple()->visible(fn(): bool => auth()->user()?->hasAnyRole([
+                    'admin',
+                    'super_admin',
+                ]));
         });
     }
 }

@@ -10,6 +10,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\SelectColumn;
@@ -20,72 +21,105 @@ class OrdersTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->deferLoading()
-            ->poll("10s")
+            ->poll("5s")
             ->modifyQueryUsing(function (Builder $query) {
                 if (Filament::getCurrentPanel()?->getId() === 'maker') {
                     return $query->whereIn('status', ['confirmed', 'processing']);
+                } elseif (Filament::getCurrentPanel()?->getId() === 'packer') {
+                    return $query->whereIn('status', ['processed', 'packing']);
                 }
 
                 return $query;
             })
             ->columns([
-                Split::make([
-                    // Cluster 1: Customer & Taker info
-                    Stack::make([
-                        TextColumn::make('customer_name')
-                            ->weight(FontWeight::Bold)
-                            ->searchable(),
-                        TextColumn::make('customer_phone')
-                            ->size('xs')
-                            ->color('gray')
-                            ->icon('heroicon-m-phone')
-                            ->searchable(),
-                        TextColumn::make('user.name')
-                            ->label('Taker')
-                            ->size('xs')
-                            ->color('primary')
-                            ->weight(FontWeight::Medium)
-                            ->formatStateUsing(fn($state) => "Taker: {$state}"),
-                    ])->space(1),
+                TextColumn::make('id')
+                    ->label('#')
+                    ->alignCenter()
+                    ->searchable(),
+                BadgeColumn::make('user.name')
+                    ->label('Taker')
+                    ->size('xs')
+                    ->color('primary')
+                    ->weight(FontWeight::Medium),
+                TextColumn::make('customer_name')
+                    ->weight(FontWeight::Bold)
+                    ->searchable(),
+                TextColumn::make('customer_phone')
+                    ->size('xs')
+                    ->color('gray')
+                    ->icon('heroicon-m-phone')
+                    ->searchable(),
+                TextColumn::make('customer_address')
+                    ->label('Address')
+                    ->limit(30)
+                    ->toggleable(isToggledHiddenByDefault: true),
+                SelectColumn::make('status')
+                    ->options(function () {
+                        $panelId = Filament::getCurrentPanel()?->getId();
 
-                    // Cluster 2: Status & Timeline
-                    Stack::make([
-                        SelectColumn::make('status')
-                            ->options([
-                                'pending' => 'Pending',
+                        // Options for the Maker panel
+                        if ($panelId === 'maker') {
+                            return [
                                 'confirmed' => 'Confirmed',
                                 'processing' => 'Processing',
                                 'processed' => 'Processed',
+                            ];
+                        }
+
+                        // Options for the Packer panel
+                        if ($panelId === 'packer') {
+                            return [
+                                'processed' => 'Processed',
                                 'packing' => 'Packing',
                                 'packed' => 'Packed',
-                                'out_for_delivery' => 'Out for Delivery',
-                                'returning' => 'Returning',
-                                'returned' => 'Returned',
-                                'completed' => 'Completed',
-                                'cancelled' => 'Cancelled',
-                            ]),
-                        TextColumn::make('created_at')
-                            ->dateTime('M j, Y H:i')
-                            ->size('xs')
-                            ->color('gray'),
-                    ])->space(1),
+                            ];
+                        }
 
-                    // Cluster 3: Financials
-                    Stack::make([
-                        TextColumn::make('final_amount')
-                            ->weight(FontWeight::Bold)
-                            ->alignEnd()
-                            ->money('NPR') // Or your local currency code
-                            ->color('success'),
-                        TextColumn::make('total_amount')
-                            ->label('Items Subtotal')
-                            ->size('xs')
-                            ->color('gray')
-                            ->alignEnd()
-                            ->formatStateUsing(fn($state) => "Base: Rs. " . number_format($state, 2)),
-                    ])->space(1),
-                ]),
+                        // Default options for Taker or other panels
+                        return [
+                            'pending' => 'Pending',
+                            'confirmed' => 'Confirmed',
+                            'processing' => 'Processing',
+                            'processed' => 'Processed',
+                            'packing' => 'Packing',
+                            'packed' => 'Packed',
+                            'out_for_delivery' => 'Out for Delivery',
+                            'returning' => 'Returning',
+                            'returned' => 'Returned',
+                            'completed' => 'Completed',
+                            'cancelled' => 'Cancelled',
+                        ];
+                    })
+                    ->disabled(function ($record) {
+                        $panelId = Filament::getCurrentPanel()?->getId();
+                        $status = $record->status;
+                        if ($panelId === 'taker' && in_array($status, ['processing', 'processed', 'packing',])) {
+                            return true;
+                        }
+
+                        return false;
+                    })
+                    ->disableOptionWhen(function (string $value): bool {
+                        $panelId = Filament::getCurrentPanel()?->getId();
+
+                        if ($panelId === 'taker') {
+                            // Disable everything EXCEPT processing and processed
+                            return in_array($value, ['processing', 'processed', 'packing', 'packed']);
+                        }
+
+                        return false; // Taker can select anything
+                    }),
+                TextColumn::make('final_amount')
+                    ->weight(FontWeight::Bold)
+                    ->alignEnd()
+                    ->money('NPR') // Or your local currency code
+                    ->color('success'),
+                TextColumn::make('total_amount')
+                    ->label('Items Subtotal')
+                    ->size('xs')
+                    ->color('gray')
+                    ->alignEnd()
+                    ->formatStateUsing(fn($state) => "Base: Rs. " . number_format($state, 2)),
 
                 // Keep detailed info toggleable for a clean look
                 TextColumn::make('discount_amount')
@@ -96,20 +130,21 @@ class OrdersTable
                     ->label('Customization')
                     ->money('NPR')
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('customer_address')
-                    ->label('Address')
-                    ->limit(30)
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')
+                    ->dateTime('M j, Y H:i')
+                    ->size('xs')
+                    ->color('gray'),
             ])
-            ->contentGrid([
-                'md' => 1,
-                'xl' => 2,
-            ])
+            // ->contentGrid([
+            //     'md' => 1,
+            //     'xl' => 2,
+            // ])
+            ->striped(true)
             ->defaultSort('created_at', 'desc')
             ->actions([
                 ViewAction::make()->iconButton(),
                 EditAction::make()->iconButton()->color('warning')
-                    ->visible(fn() => filament()->getCurrentPanel()?->getId() !== 'maker'),
+                    ->visible(fn($record) => filament()->getCurrentPanel()?->getId() === 'taker' && ($record->status === 'pending' || $record->status === 'confirmed')),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

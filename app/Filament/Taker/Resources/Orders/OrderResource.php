@@ -50,8 +50,11 @@ class OrderResource extends Resource
         ];
     }
 
-    public static function canCreate(): bool
+    public static function canEdit(Model $record): bool
     {
-        return false;
+        if ($record->status !== 'pending') {
+            return false;
+        }
+        return true;
     }
 }

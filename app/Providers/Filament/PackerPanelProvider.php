@@ -4,72 +4,55 @@ namespace App\Providers\Filament;
 
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
-use MarcelWeidum\Passkeys\PasskeysPlugin;
 use Filament\Http\Middleware\Authenticate;
-use MWGuerra\FileManager\FileManagerPlugin;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
-use MWGuerra\FileManager\Filament\Pages\FileSystem;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
-use MWGuerra\FileManager\Filament\Pages\FileManager;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use App\Filament\Taker\Resources\Orders\OrderResource;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Andreia\FilamentUiSwitcher\FilamentUiSwitcherPlugin;
 use Filament\Http\Middleware\DisableBladeIconComponents;
-use Joaopaulolndev\FilamentEditEnv\FilamentEditEnvPlugin;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
-use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
 use Moataz01\FilamentNotificationSound\FilamentNotificationSoundPlugin;
 use WatheqAlshowaiter\FilamentStickyTableHeader\StickyTableHeaderPlugin;
 use Stephenjude\FilamentTwoFactorAuthentication\TwoFactorAuthenticationPlugin;
 
-class MukhiyaPanelProvider extends PanelProvider
+class PackerPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('mukhiya')
-            // ->profile()
-            ->passwordReset()
-            ->path('mukhiya')
-            ->viteTheme('resources/css/filament/mukhiya/theme.css')
+            ->id('packer')
+            ->path('packer')
+            ->colors([
+                'primary' => Color::Amber,
+            ])
             ->login()
+            ->passwordReset()
             ->emailChangeVerification()
             ->emailVerification()
-            // ->registration()
-            ->colors([
-                'primary' => Color::Sky,
-            ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
+            ->discoverResources(in: app_path('Filament/Packer/Resources'), for: 'App\Filament\Packer\Resources')
+            ->discoverPages(in: app_path('Filament/Packer/Pages'), for: 'App\Filament\Packer\Pages')
             ->pages([
                 Dashboard::class,
             ])
-            ->navigationGroups([
-                'Stock Management',
-                'Inventory Management',
-                'Order Management',
-                'User Management',
-                'FileManager',
+            ->resources([
+                OrderResource::class,
             ])
             ->globalSearch(false)
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Paker/Widgets'), for: 'App\Filament\Paker\Widgets')
             ->widgets([
                 AccountWidget::class,
-                // FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -85,40 +68,14 @@ class MukhiyaPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->userMenuItems([
-                'profile' => Action::make('profile')
-                    ->label(fn() => auth()->user()->name)
-                    ->url(fn(): string => EditProfilePage::getUrl())
-                    ->icon('heroicon-m-user-circle'),
-            ])
             ->databaseNotifications()
             ->plugins([
-                FilamentShieldPlugin::make()
-                    ->gridColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                        'lg' => 3
-                    ])
-                    ->sectionColumnSpan(1)
-                    ->checkboxListColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                        'lg' => 4,
-                    ])
-                    ->resourceCheckboxListColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                    ]),
                 FilamentUiSwitcherPlugin::make()
                     ->withModeSwitcher(),
-                // FileManagerPlugin::make([
-                //     FileSystem::class,
-                // ]),
                 FilamentNotificationSoundPlugin::make()
                     ->volume(1.0) // Volume (0.0 to 1.0)
                     ->showAnimation(true) // Show animation on notification badge
                     ->enabled(true),
-                // PasskeysPlugin::make(),
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')
                     ->mobileFormPanelPosition('bottom')
@@ -129,9 +86,6 @@ class MukhiyaPanelProvider extends PanelProvider
                     ->enableTwoFactorAuthentication() // Enable Google 2FA
                     ->enablePasskeyAuthentication()
                     ->addTwoFactorMenuItem(), // Add 2FA menu item
-                // FilamentEditEnvPlugin::make()
-                //     ->showButton(fn() => auth()->user()->id === 1)
-                //     ->setIcon('heroicon-o-cog'),
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')
                     ->setTitle('My Profile')
@@ -141,7 +95,7 @@ class MukhiyaPanelProvider extends PanelProvider
                     ->shouldRegisterNavigation(false)
                     ->shouldShowEmailForm()
                     ->shouldShowDeleteAccountForm(false)
-                    ->shouldShowSanctumTokens()
+                    // ->shouldShowSanctumTokens()
                     ->shouldShowMultiFactorAuthentication()
                     ->shouldShowBrowserSessionsForm()
                     ->shouldShowAvatarForm(

@@ -25,7 +25,7 @@ class ProductsTable
                     ->label('SKU')
                     ->searchable(),
                 TextColumn::make('price')
-                    ->money()
+                    ->prefix('रु. ')
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),

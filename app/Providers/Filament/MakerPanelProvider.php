@@ -26,6 +26,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Moataz01\FilamentNotificationSound\FilamentNotificationSoundPlugin;
+use WatheqAlshowaiter\FilamentStickyTableHeader\StickyTableHeaderPlugin;
 use Stephenjude\FilamentTwoFactorAuthentication\TwoFactorAuthenticationPlugin;
 
 class MakerPanelProvider extends PanelProvider
@@ -40,6 +41,9 @@ class MakerPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->login()
+            ->passwordReset()
+            ->emailChangeVerification()
+            ->emailVerification()
             ->discoverResources(in: app_path('Filament/Maker/Resources'), for: 'App\Filament\Maker\Resources')
             ->discoverPages(in: app_path('Filament/Maker/Pages'), for: 'App\Filament\Maker\Pages')
             ->pages([
@@ -48,6 +52,7 @@ class MakerPanelProvider extends PanelProvider
             ->resources([
                 OrderResource::class,
             ])
+            ->globalSearch(false)
             ->discoverWidgets(in: app_path('Filament/Maker/Widgets'), for: 'App\Filament\Maker\Widgets')
             ->widgets([
                 AccountWidget::class,
@@ -109,6 +114,7 @@ class MakerPanelProvider extends PanelProvider
                         rules: 'mimes:jpeg,png|max:2048' //only accept jpeg and png files with a maximum size of 2MB
                     ),
                 FilamentApexChartsPlugin::make(),
+                StickyTableHeaderPlugin::make(),
             ]);
     }
 }
