@@ -72,7 +72,6 @@ class RoleResource extends Resource
                                     ->visible(fn (): bool => static::shield()->isCentralApp() && Utils::isTenancyEnabled())
                                     ->dehydrated(fn (): bool => static::shield()->isCentralApp() && Utils::isTenancyEnabled()),
                                 static::getSelectAllFormComponent(),
-
                             ])
                             ->columns([
                                 'sm' => 2,
@@ -161,5 +160,10 @@ class RoleResource extends Resource
     public static function getEssentialsPlugin(): ?FilamentShieldPlugin
     {
         return FilamentShieldPlugin::get();
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 }

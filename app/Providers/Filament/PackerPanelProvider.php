@@ -34,6 +34,7 @@ class PackerPanelProvider extends PanelProvider
         return $panel
             ->id('packer')
             ->path('packer')
+            ->viteTheme('resources/css/filament/packer/theme.css')
             ->colors([
                 'primary' => Color::Amber,
             ])

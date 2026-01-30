@@ -144,7 +144,7 @@ class OrderForm
                     ->columnSpanFull()
                     ->columns(3)
                     ->hidden(function () {
-                        return Filament::getCurrentPanel()?->getId() === 'maker';
+                        return Filament::getCurrentPanel()?->getId() === 'maker' || Filament::getCurrentPanel()?->getId() === 'packer';
                     }),
                 // Main Content Area (Left/Center)
                 Grid::make(1)

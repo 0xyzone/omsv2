@@ -56,7 +56,7 @@ class MakerPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Maker/Widgets'), for: 'App\Filament\Maker\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
+                // FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
