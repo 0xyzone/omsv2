@@ -8,6 +8,8 @@ use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
+use Filament\Support\Icons\Heroicon;
+use Filament\Navigation\NavigationGroup;
 use Filament\Widgets\FilamentInfoWidget;
 use MarcelWeidum\Passkeys\PasskeysPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -64,6 +66,9 @@ class MukhiyaPanelProvider extends PanelProvider
                 'Order Management',
                 'User Management',
                 'FileManager',
+                NavigationGroup::make()
+                ->label('Expense Management')
+                ->icon(Heroicon::OutlinedSquare3Stack3d)
             ])
             ->globalSearch(false)
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')

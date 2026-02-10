@@ -101,4 +101,14 @@ class User extends Authenticatable implements FilamentUser, HasPasskeys, HasAvat
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * Get all of the expense_records for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function expense_records(): HasMany
+    {
+        return $this->hasMany(ExpenseRecord::class);
+    }
 }
