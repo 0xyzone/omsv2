@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ExpenseRecords\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -16,8 +17,13 @@ class ExpenseRecordsTable
             ->columns([
                 TextColumn::make('user.name')
                     ->searchable(),
-                TextColumn::make('status')
-                    ->searchable(),
+                SelectColumn::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'confirmed' => 'Confirmed',
+                        'under-revision' => 'Under Revision',
+                        'finalized' => 'Finalized'
+                    ]),
                 TextColumn::make('total_amount')
                     ->numeric()
                     ->sortable(),
