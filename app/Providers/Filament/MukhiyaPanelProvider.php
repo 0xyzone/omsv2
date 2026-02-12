@@ -122,10 +122,6 @@ class MukhiyaPanelProvider extends PanelProvider
                 // FileManagerPlugin::make([
                 //     FileSystem::class,
                 // ]),
-                FilamentNotificationSoundPlugin::make()
-                    ->volume(1.0) // Volume (0.0 to 1.0)
-                    ->showAnimation(true) // Show animation on notification badge
-                    ->enabled(true),
                 // PasskeysPlugin::make(),
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')

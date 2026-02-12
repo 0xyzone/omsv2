@@ -81,10 +81,6 @@ class TakerPanelProvider extends PanelProvider
             ->plugins([
                 FilamentUiSwitcherPlugin::make()
                     ->withModeSwitcher(),
-                FilamentNotificationSoundPlugin::make()
-                    ->volume(1.0) // Volume (0.0 to 1.0)
-                    ->showAnimation(true) // Show animation on notification badge
-                    ->enabled(true),
                 AuthUIEnhancerPlugin::make()
                     ->formPanelPosition('left')
                     ->mobileFormPanelPosition('bottom')
