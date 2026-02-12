@@ -6,6 +6,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
+use Filament\Support\Enums\Width;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -40,6 +41,8 @@ class TakerPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald,
             ])
+            ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(Width::Full)
             ->login()
             ->passwordReset()
             ->emailChangeVerification()

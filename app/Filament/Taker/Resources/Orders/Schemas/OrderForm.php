@@ -32,114 +32,120 @@ class OrderForm
                     ->required(),
                 Grid::make(2)
                     ->schema([
-                    Group::make([
-                        Section::make('Order Status')
-                            ->hiddenOn('create')
-                            ->schema([
-                                Select::make('status')
-                                    ->options([
-                                        'pending' => 'Pending',
-                                        'confirmed' => 'Confirmed',
-                                        'processing' => 'Processing',
-                                        'processed' => 'Processed',
-                                        'packing' => 'Packing',
-                                        'packed' => 'Packed',
-                                        'out_for_delivery' => 'Out for Delivery',
-                                        'returning' => 'Returning',
-                                        'returned' => 'Returned',
-                                        'completed' => 'Completed',
-                                        'cancelled' => 'Cancelled',
-                                    ])
-                                    ->required()
-                                    ->default('pending')
-                                    ->native(false),
-                            ]),
+                        Group::make([
+                            Section::make('Order Status')
+                                ->hiddenOn('create')
+                                ->schema([
+                                    Select::make('status')
+                                        ->options([
+                                            'pending' => 'Pending',
+                                            'confirmed' => 'Confirmed',
+                                            'processing' => 'Processing',
+                                            'processed' => 'Processed',
+                                            'packing' => 'Packing',
+                                            'packed' => 'Packed',
+                                            'out_for_delivery' => 'Out for Delivery',
+                                            'returning' => 'Returning',
+                                            'returned' => 'Returned',
+                                            'completed' => 'Completed',
+                                            'cancelled' => 'Cancelled',
+                                        ])
+                                        ->required()
+                                        ->default('pending')
+                                        ->native(false),
+                                ]),
 
-                        Section::make('Customer Information')
-                            ->description('Basic contact and delivery details.')
-                            ->icon('heroicon-m-user-circle')
-                            ->columns(2)
+                            Section::make('Customer Information')
+                                ->description('Basic contact and delivery details.')
+                                ->icon('heroicon-m-user-circle')
+                                ->columns(2)
+                                ->schema([
+                                    TextInput::make('customer_name')
+                                        ->required()
+                                        ->placeholder('Full Name')
+                                        ->columnSpanFull(),
+                                    TextInput::make('customer_phone')
+                                        ->label('Primary Phone')
+                                        ->tel()
+                                        ->required()
+                                        ->numeric()
+                                        ->prefixIcon('heroicon-m-phone'),
+                                    TextInput::make('customer_alt_phone')
+                                        ->label('Secondary Phone')
+                                        ->tel()
+                                        ->numeric()
+                                        ->prefixIcon('heroicon-m-phone-arrow-up-right'),
+                                    Textarea::make('customer_address')
+                                        ->label('Delivery Address')
+                                        ->required()
+                                        ->autosize()
+                                        ->columnSpanFull()
+                                        ->rows(3),
+                                ]),
+                        ])
+                            ->columnSpan(2),
+
+                        Section::make('Financial Summary')
+                            ->icon('heroicon-m-calculator')
+                            ->columns(1)
                             ->schema([
-                                TextInput::make('customer_name')
-                                    ->required()
-                                    ->placeholder('Full Name')
-                                    ->columnSpanFull(),
-                                TextInput::make('customer_phone')
-                                    ->label('Primary Phone')
-                                    ->tel()
-                                    ->required()
+                                TextInput::make('total_amount')
+                                    ->label('Items Total')
+                                    ->prefix('रु. ')
+                                    ->dehydrated()
+                                    ->disabled(),
+
+                                TextInput::make('customization_amount')
+                                    ->label('Customization Fee')
                                     ->numeric()
-                                    ->prefixIcon('heroicon-m-phone'),
-                                TextInput::make('customer_alt_phone')
-                                    ->label('Secondary Phone')
-                                    ->tel()
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->prefix('रु. ')
+                                    ->default(0.0)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+
+                                Select::make('discount_type')
+                                    ->options([
+                                        'percentage' => 'Percentage (%)',
+                                        'fixed' => 'Fixed Amount',
+                                        'none' => 'No Discount',
+                                    ])
+                                    ->disablePlaceholderSelection()
+                                    ->live()
+                                    ->default('none')
+                                    ->native(false)
+                                    ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+
+                                TextInput::make('discount_value')
+                                    ->visible(fn(Get $get) => $get('discount_type') !== 'none')
                                     ->numeric()
-                                    ->prefixIcon('heroicon-m-phone-arrow-up-right'),
-                                Textarea::make('customer_address')
-                                    ->label('Delivery Address')
-                                    ->required()
-                                    ->autosize()
-                                    ->columnSpanFull()
-                                    ->rows(3),
+                                    ->label(fn(Get $get) => $get('discount_type') === 'percentage' ? 'Rate (%)' : 'Amount')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+
+                                TextInput::make('discount_amount')
+                                    ->label('Discount Applied')
+                                    ->prefix('रु. ')
+                                    ->dehydrated()
+                                    ->disabled()
+                                    ->numeric(),
+                                TextInput::make('delivery_charge')
+                                    ->label('Delivery Charge')
+                                    ->prefix('रु. ')
+                                    ->numeric()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
+
+                                TextInput::make('final_amount')
+                                    ->label('Grand Total')
+                                    ->prefix('रु. ')
+                                    ->extraInputAttributes(['style' => 'font-weight: bold; font-size: 1.2rem;'])
+                                    ->dehydrated()
+                                    ->disabled()
+                                    ->required(),
                             ]),
                     ])
-                    ->columnSpan(2),
-
-                    Section::make('Financial Summary')
-                        ->icon('heroicon-m-calculator')
-                        ->columns(1)
-                        ->schema([
-                            TextInput::make('total_amount')
-                                ->label('Items Total')
-                                ->prefix('रु. ')
-                                ->dehydrated()
-                                ->disabled(),
-
-                            TextInput::make('customization_amount')
-                                ->label('Customization Fee')
-                                ->numeric()
-                                ->disabled()
-                                ->dehydrated()
-                                ->prefix('रु. ')
-                                ->default(0.0)
-                                ->live(onBlur: true)
-                                ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
-
-                            Select::make('discount_type')
-                                ->options([
-                                    'percentage' => 'Percentage (%)',
-                                    'fixed' => 'Fixed Amount',
-                                    'none' => 'No Discount',
-                                ])
-                                ->disablePlaceholderSelection()
-                                ->live()
-                                ->default('none')
-                                ->native(false)
-                                ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
-
-                            TextInput::make('discount_value')
-                                ->visible(fn(Get $get) => $get('discount_type') !== 'none')
-                                ->numeric()
-                                ->label(fn(Get $get) => $get('discount_type') === 'percentage' ? 'Rate (%)' : 'Amount')
-                                ->live(onBlur: true)
-                                ->afterStateUpdated(fn(Set $set, Get $get) => static::calculateFinalAmount($get, $set)),
-
-                            TextInput::make('discount_amount')
-                                ->label('Discount Applied')
-                                ->prefix('रु. ')
-                                ->dehydrated()
-                                ->disabled()
-                                ->numeric(),
-
-                            TextInput::make('final_amount')
-                                ->label('Grand Total')
-                                ->prefix('रु. ')
-                                ->extraInputAttributes(['style' => 'font-weight: bold; font-size: 1.2rem;'])
-                                ->dehydrated()
-                                ->disabled()
-                                ->required(),
-                        ]),
-                ])
                     ->grow(false)
                     ->columnSpanFull()
                     ->columns(3)
@@ -201,11 +207,11 @@ class OrderForm
                                                 Select::make('is_customizable')
                                                     ->label('Customizable?')
                                                     ->options([
-                                                        TRUE => 'Yes',
-                                                        FALSE => 'No'
+                                                        'yes' => 'Yes',
+                                                        'no' => 'No'
                                                     ])
                                                     ->required()
-                                                    ->default(FALSE)
+                                                    ->default('no')
                                                     ->live()
                                                     ->disablePlaceholderSelection()
                                                     ->native(false),
@@ -218,7 +224,7 @@ class OrderForm
                                                     ->afterStateUpdated(function (Set $set, Get $get) {
                                                         static::calculateFinalAmount($get, $set);
                                                     })
-                                                    ->hidden(fn(Get $get) => $get('is_customizable') == FALSE),
+                                                    ->hidden(fn(Get $get) => $get('is_customizable') == 'no'),
                                             ]),
 
                                         Group::make([
@@ -231,7 +237,7 @@ class OrderForm
                                                 ->imageEditor()
                                                 ->directory('order_item_customizations')
                                                 ->panelLayout('integrated'),
-                                        ])->hidden(fn(Get $get) => $get('is_customizable') == FALSE),
+                                        ])->hidden(fn(Get $get) => $get('is_customizable') == 'no'),
 
                                         Textarea::make('notes')
                                             ->label('Item Notes')
@@ -281,7 +287,9 @@ class OrderForm
         $set('total_amount', $totalAmount);
         $set('customization_amount', $customizationAmount);
 
-        $finalAmount = $totalAmount + $customizationAmount - $discountAmount;
+        $deliveryCharge = (float) ($get('delivery_charge') ?? 0);
+
+        $finalAmount = $totalAmount + $customizationAmount - $discountAmount + $deliveryCharge;
         $set('final_amount', $finalAmount >= 0 ? $finalAmount : 0);
     }
 }

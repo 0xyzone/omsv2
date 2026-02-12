@@ -3,6 +3,7 @@
 namespace App\Filament\Taker\Resources\Orders\Tables;
 
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -41,21 +42,21 @@ class OrdersTable
                     ->size('xs')
                     ->color('primary')
                     ->weight(FontWeight::Medium)
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('customer_name')
                     ->weight(FontWeight::Bold)
                     ->searchable()
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('customer_phone')
                     ->size('xs')
                     ->color('gray')
                     ->icon('heroicon-m-phone')
                     ->searchable()
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('customer_address')
                     ->label('Address')
                     ->limit(30)
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 SelectColumn::make('status')
                     ->options(function () {
                         $panelId = Filament::getCurrentPanel()?->getId();
@@ -117,7 +118,7 @@ class OrdersTable
                     ->alignEnd()
                     ->money('NPR') // Or your local currency code
                     ->color('success')
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('total_amount')
                     ->label('Items Subtotal')
                     ->prefix('रु ')
@@ -125,24 +126,24 @@ class OrdersTable
                     ->color('gray')
                     ->alignEnd()
                     ->formatStateUsing(fn($state) => "Base: Rs. " . number_format($state, 2))
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
 
                 // Keep detailed info toggleable for a clean look
                 TextColumn::make('discount_amount')
                     ->label('Discount')
                     ->prefix('रु ')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('customization_amount')
                     ->label('Customization')
                     ->prefix('रु ')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('created_at')
                     ->dateTime('M j, Y H:i')
                     ->size('xs')
                     ->color('gray')
-                    ->hidden(fn () => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
+                    ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
             ])
             // ->contentGrid([
             //     'md' => 1,
@@ -154,6 +155,12 @@ class OrdersTable
                 ViewAction::make()->iconButton(),
                 EditAction::make()->iconButton()->color('warning')
                     ->visible(fn($record) => filament()->getCurrentPanel()?->getId() === 'taker' && ($record->status === 'pending' || $record->status === 'confirmed')),
+                Action::make('Print')
+                ->button()
+                ->color('primary')
+                ->url(function ($record) {
+                    return route('print', ['id' => $record]);
+                }, shouldOpenInNewTab: true),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

@@ -30,7 +30,6 @@ class OrderItem extends Model
     }
 
     protected $casts = [
-        'is_customizable' => 'boolean',
         'images' => 'array',
     ];
 }

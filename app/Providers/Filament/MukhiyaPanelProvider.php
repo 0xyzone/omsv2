@@ -6,6 +6,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
+use Filament\Support\Enums\Width;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Support\Icons\Heroicon;
@@ -48,6 +49,8 @@ class MukhiyaPanelProvider extends PanelProvider
             ->passwordReset()
             ->path('mukhiya')
             ->viteTheme('resources/css/filament/mukhiya/theme.css')
+            ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(Width::Full)
             ->login()
             ->emailChangeVerification()
             ->emailVerification()

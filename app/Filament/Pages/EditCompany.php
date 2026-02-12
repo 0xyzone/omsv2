@@ -62,11 +62,9 @@ class EditCompany extends Page implements HasForms
                                             ->prefixIcon('heroicon-m-envelope'),
                                         TextInput::make('phone')
                                             ->label('Contact Phone')
-                                            ->tel()
                                             ->prefixIcon('heroicon-m-phone'),
                                         TextInput::make('website')
                                             ->label('Website URL')
-                                            ->url()
                                             ->prefixIcon('heroicon-m-globe-alt'),
                                         DatePicker::make('established_date')
                                             ->label('Establishment Date')
