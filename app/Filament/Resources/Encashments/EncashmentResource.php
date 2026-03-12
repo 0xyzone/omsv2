@@ -50,4 +50,10 @@ class EncashmentResource extends Resource
             'edit' => EditEncashment::route('/{record}/edit'),
         ];
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
 }
