@@ -3,17 +3,19 @@
 namespace App\Filament\Resources\Stocks\Schemas;
 
 use App\Models\Material;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Group;
-// Use v4 Schema components
-use Filament\Forms\Components\Textarea;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class StockForm
 {
@@ -40,7 +42,22 @@ class StockForm
                                         ->searchable()
                                         ->preload()
                                         ->required()
-                                        ->columnSpanFull(),
+                                        ->columnSpan(function (Get $get) {
+                                            return $get('type') === 'subtract' ? 1 : 2;
+                                        }),
+
+                                    Radio::make('is_damaged')
+                                        ->label('Is Damaged?')
+                                        ->inline(condition: true)
+                                        ->options([
+                                            'true' => 'Yes',
+                                            'false' => 'No',
+                                        ])
+                                        ->default("false")
+                                        ->visible(function (Get $get) {
+                                            return $get('type') === 'subtract';
+                                        })
+                                        ->columnSpan(1),
 
                                     Select::make('type')
                                         ->label('Transaction Type')
@@ -48,6 +65,7 @@ class StockForm
                                             'add' => 'Stock In (Add)',
                                             'subtract' => 'Stock Out (Subtract)',
                                         ])
+                                        ->live()
                                         ->default('add')
                                         ->required()
                                         ->selectablePlaceholder(false)

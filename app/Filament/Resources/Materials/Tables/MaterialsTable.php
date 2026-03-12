@@ -17,6 +17,7 @@ class MaterialsTable
         return $table
             ->columns([
                 ImageColumn::make('image_path')
+                ->label('Image')
                 ->circular(),
                 TextColumn::make('name')
                 ->searchable(),
@@ -47,9 +48,9 @@ class MaterialsTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }

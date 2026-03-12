@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Materials;
 
-use App\Filament\Resources\Materials\Pages\CreateMaterial;
-use App\Filament\Resources\Materials\Pages\EditMaterial;
+// use App\Filament\Resources\Materials\Pages\CreateMaterial;
+// use App\Filament\Resources\Materials\Pages\EditMaterial;
 use App\Filament\Resources\Materials\Pages\ListMaterials;
 use App\Filament\Resources\Materials\Schemas\MaterialForm;
 use App\Filament\Resources\Materials\Tables\MaterialsTable;
@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class MaterialResource extends Resource
 {

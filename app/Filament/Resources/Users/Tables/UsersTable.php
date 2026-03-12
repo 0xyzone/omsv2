@@ -112,9 +112,9 @@ class UsersTable
                 EditAction::make()->iconButton()->color('warning'),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ])
             ->defaultSort('created_at', 'desc');
     }

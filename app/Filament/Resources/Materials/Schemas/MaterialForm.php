@@ -43,8 +43,9 @@ class MaterialForm
                                 TextInput::make('stock_quantity')
                                     ->numeric()
                                     ->default(0)
+                                    ->dehydrated()
                                     ->required()
-                                    ->disabledOn('edit')
+                                    ->disabled()
                                     ->prefixIcon('heroicon-m-cube'),
                                 TextInput::make('unit_of_measure')
                                     ->prefixIcon('heroicon-m-beaker'),

@@ -16,4 +16,9 @@ class ListMaterials extends ListRecords
             CreateAction::make(),
         ];
     }
+
+    public function canDelete(): bool
+    {
+        return false;
+    }
 }
