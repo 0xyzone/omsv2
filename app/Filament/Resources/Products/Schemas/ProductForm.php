@@ -95,6 +95,7 @@ class ProductForm
                                     ->image()
                                     ->disk('public')
                                     ->directory('product-images')
+                                    ->visibility('public')
                                     ->imageAspectRatio('1:1')
                                     ->automaticallyOpenImageEditorForAspectRatio()
                                     ->imageResizeMode('cover')

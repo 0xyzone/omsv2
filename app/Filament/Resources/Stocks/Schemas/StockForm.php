@@ -104,7 +104,9 @@ class StockForm
                                         ->label('Reference Image')
                                         ->image()
                                         ->imageEditor()
-                                        ->directory('stock-movements'),
+                                        ->directory('stock-movements')
+                                        ->disk('public')
+                                        ->visibility('public'),
                                 ]),
                         ])
                             ->columnSpan(['lg' => 1]),

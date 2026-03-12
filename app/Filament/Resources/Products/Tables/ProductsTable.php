@@ -20,7 +20,8 @@ class ProductsTable
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
-                ImageColumn::make('image_path'),
+                ImageColumn::make('image_path')
+                    ->visibility('public'),
                 TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable(),
