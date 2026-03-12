@@ -21,7 +21,9 @@ class ProductsTable
                 TextColumn::make('name')
                     ->searchable(),
                 ImageColumn::make('image_path')
-                    ->visibility('public'),
+                    ->visibility('public')
+                    ->disk('public')
+                    ->label('Image'),
                 TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable(),
