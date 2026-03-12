@@ -12,6 +12,9 @@ class PrintController extends Controller
     public function print($id)
     {
         $order = Order::find($id);
+        if(!$order) {
+            abort(404);
+        }
         $company = Company::latest()->first();
 
         $pdf = app()->make(PDF::class);
