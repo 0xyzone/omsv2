@@ -97,7 +97,10 @@ class OrdersTable
                     ->disabled(function ($record) {
                         $panelId = Filament::getCurrentPanel()?->getId();
                         $status = $record->status;
-                        if ($panelId === 'taker' && in_array($status, ['processing', 'processed', 'packing',])) {
+                        if ($panelId === 'taker' && auth()->user()->hasRole('super_admin')) {
+                            // Super admin can change
+                            return false;
+                        } elseif ($panelId === 'taker' && in_array($status, ['processing', 'processed', 'packing', 'completed', 'cancelled'])) {
                             return true;
                         }
 
