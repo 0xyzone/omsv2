@@ -104,8 +104,7 @@ class ProductForm
                                     ->imageEditorAspectRatioOptions(['1:1'])
                                     ->imagePreviewHeight('250')
                                     ->panelLayout('integrated')
-                                    ->downloadable()
-                                    ->moveFiles(),
+                                    ->downloadable(),
                             ]),
                     ])
                     ->columnSpan(['lg' => 1]),
