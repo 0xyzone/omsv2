@@ -15,6 +15,7 @@ class MaterialsTable
             ->columns([
                 ImageColumn::make('image_path')
                 ->label('Image')
+                ->imageGallery()
                 ->circular(),
                 TextColumn::make('name')
                 ->searchable(),
