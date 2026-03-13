@@ -15,6 +15,8 @@ class CategoriesTable
                 TextColumn::make('name')
                     ->searchable(),
                 ImageColumn::make('image_path')
+                    ->label('Image')
+                    ->disk('public')
                     ->imageGallery(),
                 TextColumn::make('description')
                     ->limit(50),
