@@ -236,7 +236,7 @@ class OrderForm
                                                 ->image()
                                                 ->imageEditor()
                                                 ->directory('order_item_customizations')
-                                                ->panelLayout('integrated'),
+                                                ->panelLayout('grid'),
                                         ])->hidden(fn(Get $get) => $get('is_customizable') == 'no'),
 
                                         Textarea::make('notes')
