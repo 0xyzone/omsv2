@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Stocks\Schemas;
 
-use App\Models\Material;
-use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
