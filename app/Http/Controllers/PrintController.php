@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Order;
 use Barryvdh\DomPDF\PDF;
-use Illuminate\Http\Request;
 
 class PrintController extends Controller
 {
