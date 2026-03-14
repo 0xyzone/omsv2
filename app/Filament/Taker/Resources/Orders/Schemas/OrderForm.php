@@ -231,6 +231,7 @@ class OrderForm
                                             FileUpload::make('images')
                                                 ->multiple()
                                                 ->image()
+                                                ->downloadable()
                                                 ->imageEditor()
                                                 ->directory('order_item_customizations')
                                                 ->panelLayout('grid'),
