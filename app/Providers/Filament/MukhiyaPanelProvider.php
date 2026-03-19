@@ -2,41 +2,42 @@
 
 namespace App\Providers\Filament;
 
+use Andreia\FilamentUiSwitcher\FilamentUiSwitcherPlugin;
+use App\Livewire\LatestOrders;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
+use Filament\Actions\Action;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\AuthenticateSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Actions\Action;
-use Filament\Pages\Dashboard;
-use Filament\Support\Enums\Width;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
-use Filament\Navigation\NavigationGroup;
+use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
-use MarcelWeidum\Passkeys\PasskeysPlugin;
-use Filament\Http\Middleware\Authenticate;
-use MWGuerra\FileManager\FileManagerPlugin;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Filament\Http\Middleware\AuthenticateSession;
-use MWGuerra\FileManager\Filament\Pages\FileSystem;
-use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
-use MWGuerra\FileManager\Filament\Pages\FileManager;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Andreia\FilamentUiSwitcher\FilamentUiSwitcherPlugin;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Joaopaulolndev\FilamentEditEnv\FilamentEditEnvPlugin;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Joaopaulolndev\FilamentEditEnv\FilamentEditEnvPlugin;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
-use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
+use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
+use MarcelWeidum\Passkeys\PasskeysPlugin;
 use Moataz01\FilamentNotificationSound\FilamentNotificationSoundPlugin;
-use WatheqAlshowaiter\FilamentStickyTableHeader\StickyTableHeaderPlugin;
+use MWGuerra\FileManager\Filament\Pages\FileManager;
+use MWGuerra\FileManager\Filament\Pages\FileSystem;
+use MWGuerra\FileManager\FileManagerPlugin;
 use Stephenjude\FilamentTwoFactorAuthentication\TwoFactorAuthenticationPlugin;
+use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
+use WatheqAlshowaiter\FilamentStickyTableHeader\StickyTableHeaderPlugin;
 
 class MukhiyaPanelProvider extends PanelProvider
 {
@@ -76,7 +77,8 @@ class MukhiyaPanelProvider extends PanelProvider
             ->globalSearch(false)
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
+                // AccountWidget::class,
+                LatestOrders::class,
                 // FilamentInfoWidget::class,
             ])
             ->middleware([
