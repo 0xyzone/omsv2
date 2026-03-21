@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PrintController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,3 +15,5 @@ Route::post('/login', [App\Http\Controllers\LoginController::class, 'authenticat
 Route::get('/suspended', function () {
     return view('errors.suspended');
 })->name('suspended.notice');
+
+Route::post('/custom-logout', [LogoutController::class, 'logout'])->name('custom.logout');
