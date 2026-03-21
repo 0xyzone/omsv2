@@ -33,7 +33,7 @@ class UsersTable
                                 ->searchable()
                                 ->sortable()
                                 ->iconColor(fn($record): string => $record->hasRole('super_admin') ? 'primary' : ($record->hasRole('taker') ? 'info' : ($record->hasRole('maker') ? 'warning' : 'gray'))),
-                            
+
                             TextColumn::make('email')
                                 ->size('xs')
                                 ->color('gray')
@@ -43,7 +43,7 @@ class UsersTable
                             TextColumn::make('roles.name')
                                 ->size('xs')
                                 ->limitList(2)
-                                ->formatStateUsing(fn (string $state): string => str_replace('_', ' ', $state))
+                                ->formatStateUsing(fn(string $state): string => str_replace('_', ' ', $state))
                                 ->icon(function ($record) {
                                     return $record->hasRole('super_admin') ? 'heroicon-m-shield-check' : ($record->hasRole('taker') ? 'heroicon-m-clipboard-document-list' : ($record->hasRole('maker') ? 'heroicon-m-bolt' : null));
                                 })
@@ -55,6 +55,12 @@ class UsersTable
 
                         // Cluster 2: Status Badges (Right Aligned)
                         Stack::make([
+                            TextColumn::make('status')
+                                ->badge()
+                                ->state(fn($record) => $record->status == "active" ? 'Active' : 'Suspended')
+                                ->color(fn($state) => $state === 'Active' ? 'success' : 'danger')
+                                ->icon(fn($state) => $state === 'Active' ? 'heroicon-m-check-badge' : 'heroicon-m-x-circle'),
+                                
                             TextColumn::make('email_verified_at')
                                 ->badge()
                                 ->state(fn($record): string => $record->email_verified_at ? 'Verified' : 'Pending')
@@ -66,11 +72,12 @@ class UsersTable
                                 ->state(fn($record) => $record->two_factor_confirmed_at ? '2FA Active' : '2FA Disabled')
                                 ->color(fn($state) => $state === '2FA Active' ? 'info' : 'gray')
                                 ->icon(fn($state) => $state === '2FA Active' ? 'heroicon-m-shield-check' : 'heroicon-m-shield-exclamation'),
+
                         ])
-                        ->visibleFrom('md')
-                        ->alignment('right')
-                        ->grow(false)
-                        ->space(1),
+                            ->visibleFrom('md')
+                            ->alignment('right')
+                            ->grow(false)
+                            ->space(1),
                     ]),
 
                     // Footer Area: Contact Info & Joined Date
@@ -87,7 +94,7 @@ class UsersTable
                                 ->size('xs')
                                 ->color('gray'),
                         ]),
-                        
+
                         TextColumn::make('created_at')
                             ->dateTime('M d, Y')
                             ->size('xs')
@@ -95,11 +102,11 @@ class UsersTable
                             ->icon('heroicon-m-calendar')
                             ->alignEnd(),
                     ])
-                    ->extraAttributes([
-                        'class' => 'pt-3 mt-1 border-t border-gray-800 dark:border-gray-500'
-                    ]),
+                        ->extraAttributes([
+                            'class' => 'pt-3 mt-1 border-t border-gray-800 dark:border-gray-500'
+                        ]),
                 ])
-                ->space(3),
+                    ->space(3),
             ])
             ->contentGrid([
                 'md' => 1,

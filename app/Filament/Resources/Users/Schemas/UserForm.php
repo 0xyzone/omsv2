@@ -39,6 +39,13 @@ class UserForm
                     ->multiple()
                     ->preload()
                     ->searchable(),
+                Select::make('status')
+                    ->options([
+                        'active' => 'Active',
+                        'suspended' => 'Suspended',
+                    ])
+                    ->default('active')
+                    ->required(),
             ]);
     }
 }
