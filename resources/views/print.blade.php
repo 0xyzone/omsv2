@@ -153,7 +153,7 @@
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         @endphp
-            <img src="{{ $base64 }}" alt="Company Logo" style="width: auto; height: 64px; margin: auto 0; display: block;">
+        <img src="{{ $base64 }}" alt="Company Logo" style="width: auto; height: 64px; margin: auto 0; display: block;">
         @endif
         <h1>{{ $company->name ?? "Company Name" }}</h1>
         <p>{{ $company->address ?? "Company Address" }}</p>
