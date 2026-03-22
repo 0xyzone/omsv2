@@ -18,7 +18,7 @@ class StatsOverview extends StatsOverviewWidget
         $totalExpenses = \App\Models\ExpenseRecordItem::sum('total');
         return [
             Stat::make('Total Orders', $totalOrders)
-                ->description('15% increase from last week'),
+                ->description($this->calcOrdersDescriptionPercentage()),
             Stat::make('Total Revenue', '$' . number_format($totalRevenue, 2))
                 ->description($this->calcRevenueDescriptionPercentage()),
             Stat::make('Total Expenses', '$' . number_format($totalExpenses, 2))
