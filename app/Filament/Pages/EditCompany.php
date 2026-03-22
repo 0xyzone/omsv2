@@ -103,6 +103,8 @@ class EditCompany extends Page implements HasForms
                                             ->label('Company Logo')
                                             ->image()
                                             ->directory('company-documents')
+                                            ->disk('public')
+                                            ->visibility('public')
                                             ->imageEditor()
                                             ->avatar() // Makes it a clean circle
                                             ->alignCenter(),
