@@ -26,6 +26,20 @@ class StatsOverview extends StatsOverviewWidget
         ];
     }
 
+    public function calcOrdersDescriptionPercentage(): string
+    {
+        $previousDate = now()->subWeek();
+        $today = now();
+        $previousOrders = \App\Models\Order::whereBetween('created_at', [$previousDate, $today])->count();
+        $currentOrders = \App\Models\Order::whereBetween('created_at', [now()->subWeek(), now()])->count();
+        if ($previousOrders == 0) {
+            return 'N/A';
+        }
+        $percentageChange = (($currentOrders - $previousOrders) / $previousOrders) * 100;
+        $sign = $percentageChange > 0 ? '+' : '';
+        return $sign . number_format($percentageChange, 2) . '% increase from last week';
+    }
+
     public function calcRevenueDescriptionPercentage(): string
     {
         $previousDate = now()->subWeek();
