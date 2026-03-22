@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Andreia\FilamentUiSwitcher\FilamentUiSwitcherPlugin;
 use App\Http\Middleware\CheckUserStatus;
 use App\Livewire\LatestOrders;
+use App\Livewire\StatsOverview;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Actions\Action;
@@ -80,6 +81,7 @@ class MukhiyaPanelProvider extends PanelProvider
             ->widgets([
                 // AccountWidget::class,
                 LatestOrders::class,
+                StatsOverview::class,
                 // FilamentInfoWidget::class,
             ])
             ->middleware([
