@@ -156,7 +156,7 @@
         @endphp
         <img src="{{ $base64 }}" alt="Company Logo" style="width: auto; height: 64px; margin: auto 0; display: block;">
         @endif
-        <h1>{{ $company->name ?? "Company Name" }}</h1>
+        {{-- <h1>{{ $company->name ?? "Company Name" }}</h1> --}}
         <p>{{ $company->address ?? "Company Address" }}</p>
         <p>{{ $company->phone ?? "Company Phone" }}</p>
         <p>{{ $company->email ?? "Company Email" }}</p>
