@@ -110,7 +110,7 @@ class StockForm
                             ->columnSpan(['lg' => 1]),
                         TextInput::make('balance')
                             ->hidden()
-                            ->default(function (Model $record, array $data = []) {
+                            ->default(function (Model $record = null, array $data = []) {
                                 $materialId = $data['material_id'] ?? $record?->material_id;
                                 $quantity = $data['quantity'] ?? $record?->quantity;
                                 $type = $data['type'] ?? $record?->type;
