@@ -41,11 +41,13 @@ class OrdersTable
                     ->label('#')
                     ->alignCenter()
                     ->searchable(),
-                BadgeColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('Taker')
                     ->size('xs')
                     ->color('primary')
                     ->weight(FontWeight::Medium)
+                    ->badge()
+                    ->searchable(),
                     ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('customer_name')
                     ->weight(FontWeight::Bold)

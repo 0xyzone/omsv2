@@ -15,6 +15,8 @@ class ExpenseRecordsTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->searchable(),
                 TextColumn::make('user.name')
                     ->searchable(),
                 SelectColumn::make('status')
