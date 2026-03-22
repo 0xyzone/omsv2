@@ -24,10 +24,8 @@ class LatestOrders extends TableWidget
                 TextColumn::make('customer_name')
                     ->searchable(),
                 TextColumn::make('customer_phone')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('customer_alt_phone')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
                     ->searchable(),
