@@ -47,7 +47,7 @@ class OrdersTable
                     ->color('primary')
                     ->weight(FontWeight::Medium)
                     ->badge()
-                    ->searchable(),
+                    ->searchable()
                     ->hidden(fn() => Filament::getCurrentPanel()?->getId() === 'packer' || Filament::getCurrentPanel()?->getId() === 'maker'),
                 TextColumn::make('customer_name')
                     ->weight(FontWeight::Bold)
