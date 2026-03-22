@@ -106,7 +106,6 @@ class EditCompany extends Page implements HasForms
                                             ->disk('public')
                                             ->visibility('public')
                                             ->imageEditor()
-                                            ->avatar() // Makes it a clean circle
                                             ->alignCenter(),
                                     ]),
 
