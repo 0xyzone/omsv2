@@ -174,6 +174,9 @@
         $deliveryCharge = $order->delivery_charge;
         $totalAmount = $order->final_amount;
         $customizationAmount = $order->customization_amount;
+        $payments = $order->orderPayments;
+        $paymentsSum = $payments->sum('amount');
+        $balanceDue = $totalAmount - $paymentsSum;
         @endphp
         <div class="invoice-content">
             <div class="order-header">
@@ -234,6 +237,21 @@
                             <hr style="border: 2px dotted #000000; border-style: none none dotted; color: #fff; background-color: #fff;">
                         </td>
                     </tr>
+                    @if ($paymentsSum > 0)
+                    <tr>
+                        <td class="total" colspan="2">Amount Paid</td>
+                        <td class="total-amount" colspan="2">Rs. {{ formatNumber($paymentsSum) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="total" colspan="2">Balance Due</td>
+                        <td class="total-amount" colspan="2">Rs. {{ formatNumber($balanceDue) }}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;" colspan='4'>
+                            <hr style="border: 2px dotted #000000; border-style: none none dotted; color: #fff; background-color: #fff;">
+                        </td>
+                    </tr>
+                    @endif
                 </tfoot>
             </table>
 
