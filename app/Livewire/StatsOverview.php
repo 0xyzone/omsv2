@@ -19,9 +19,9 @@ class StatsOverview extends StatsOverviewWidget
         return [
             Stat::make('Total Orders', $totalOrders)
                 ->description($this->calcOrdersDescriptionPercentage()),
-            Stat::make('Total Revenue', '$' . number_format($totalRevenue, 2))
+            Stat::make('Total Revenue', 'रु ' . number_format($totalRevenue, 2))
                 ->description($this->calcRevenueDescriptionPercentage()),
-            Stat::make('Total Expenses', '$' . number_format($totalExpenses, 2))
+            Stat::make('Total Expenses', 'रु ' . number_format($totalExpenses, 2))
                 ->description($this->calcExpensesDescriptionPercentage()),
         ];
     }
