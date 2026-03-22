@@ -3,20 +3,21 @@
 namespace App\Filament\Taker\Resources\Orders\Schemas;
 
 use App\Models\Product;
-use Filament\Schemas\Schema;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Group;
-// Correct Layout Imports for Filament 4.x
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 
 class OrderForm
 {
@@ -250,11 +251,58 @@ class OrderForm
                                     ->columnSpanFull(),
                             ])
                             ->columnSpanFull(),
+                        Section::make('Order Payments')
+                            ->hidden(function () {
+                                return Filament::getCurrentPanel()?->getId() === 'maker' || Filament::getCurrentPanel()?->getId() === 'packer';
+                            })
+                            ->description('Record payments made for this order.')
+                            ->icon('heroicon-m-currency-rupee')
+                            ->schema([
+                                Repeater::make('order_payments')
+                                    ->relationship('orderPayments')
+                                    ->schema([
+                                        Grid::make(2)
+                                            ->schema([
+                                                TextInput::make('amount')
+                                                    ->label('Payment Amount')
+                                                    ->prefix('रु. ')
+                                                    ->numeric()
+                                                    ->required(),
+                                                Select::make('payment_method')
+                                                    ->required()
+                                                    ->disablePlaceholderSelection()
+                                                    ->options([
+                                                        'cash' => 'Cash',
+                                                        'card' => 'Card',
+                                                        'online' => 'Online',
+                                                        'other' => 'Other',
+                                                    ])
+                                                    ->default('cash')
+                                                    ->placeholder('e.g., Cash, Card, Online'),
+                                            ]),
+                                        DatePicker::make('payment_date')
+                                            ->label('Payment Date & Time')
+                                            ->required()
+                                            ->native(false)
+                                            ->default(now()),
+                                        TextInput::make('transaction_id')
+                                            ->label('Transaction ID')
+                                            ->placeholder('Reference number for online payments (optional)'),
+                                        Textarea::make('notes')
+                                            ->label('Payment Notes')
+                                            ->placeholder('Additional details about this payment...')
+                                            ->rows(2),
+                                        FileUpload::make('images')
+                                            ->multiple()
+                                            ->image()
+                                            ->downloadable()
+                                            ->directory('order_payment_receipts')
+                                            ->panelLayout('grid'),
+                                    ]),
+                            ])
+                            ->columnSpanFull(),
                     ])
-                    ->grow(true)
                     ->columnSpanFull(),
-
-                // Sidebar Area (Right)
             ]);
     }
 

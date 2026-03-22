@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use App\Models\OrderItem;
+use App\Models\OrderPayment;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -28,5 +29,15 @@ class Order extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Get all of the order_payments for the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orderPayments(): HasMany
+    {
+        return $this->hasMany(OrderPayment::class);
     }
 }
