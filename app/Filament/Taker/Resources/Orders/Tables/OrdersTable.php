@@ -249,9 +249,13 @@ class OrdersTable
                             ->send();
                     })
                     ->visible(
-                        fn($record) =>
-                        Filament::getCurrentPanel()?->getId() === 'taker' &&
-                        in_array($record->status, ['confirmed', 'processing', 'processed', 'packing', 'packed'])
+                        function ($record) {
+                            $panel = Filament::getCurrentPanel()?->getId();
+                            $paymentsMade = $record->orderPayments()->sum('amount');
+                            $finalAmount = $record->final_amount;
+                            $paymentStatus = ($paymentsMade > 0 && $finalAmount > $paymentsMade) ? 'partially_paid' : ($paymentsMade >= $finalAmount ? 'paid' : 'unpaid');
+                            return $panel === 'taker' && $paymentStatus !== 'paid';
+                        }
                     ),
             ])
             ->bulkActions([
