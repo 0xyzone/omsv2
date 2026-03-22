@@ -74,6 +74,7 @@ class ExpenseRecordForm
                             ->live()
                             ->native(false)
                             ->preload()
+                            ->searchable()
                             ->columnSpan(2)
                             ->createOptionForm([
                                 Select::make('expense_category_id')

@@ -14,8 +14,7 @@ class ExpenseItemsTable
     {
         return $table
             ->columns([
-                TextColumn::make('expense_category.name')
-                    ->searchable(),
+                TextColumn::make('expense_category.name'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('Total Quantity')

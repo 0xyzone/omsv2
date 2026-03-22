@@ -28,6 +28,7 @@ class LatestOrders extends TableWidget
                 TextColumn::make('customer_alt_phone')
                     ->sortable(),
                 TextColumn::make('status')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('total_amount')
                     ->numeric()
