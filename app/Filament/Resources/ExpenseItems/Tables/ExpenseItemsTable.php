@@ -18,6 +18,14 @@ class ExpenseItemsTable
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('Total Quantity')
+                    ->getStateUsing(fn($record) => $record->expense_record_items()->sum('quantity'))
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('Total Amount')
+                    ->getStateUsing(fn($record) => $record->expense_record_items()->sum('total'))
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
