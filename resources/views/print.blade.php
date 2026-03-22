@@ -146,9 +146,10 @@
 </head>
 <body>
     <div style="margin: 10px; text-align: center;">
-        @if ($company->logo_path != null && file_exists(storage_path('app/public/' . $company->logo_path)))
+        @if ($company->logo_path != null )
         @php
-        $path = storage_path('app/public/' . $company->logo_path);
+        $path = asset('storage/' . $company->logo_path);
+        // echo $path;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
