@@ -145,7 +145,16 @@
     </style>
 </head>
 <body>
-    <div style="margin: 10px;">
+    <div style="margin: 10px; text-align: center;">
+        @if ($company->logo_path != null && file_exists(storage_path('app/public/' . $company->logo_path)))
+        @php
+        $path = storage_path('app/public/' . $company->logo_path);
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        @endphp
+            <img src="{{ $base64 }}" alt="Company Logo" style="width: auto; height: 64px; margin: auto 0; display: block;">
+        @endif
         <h1>{{ $company->name ?? "Company Name" }}</h1>
         <p>{{ $company->address ?? "Company Address" }}</p>
         <p>{{ $company->phone ?? "Company Phone" }}</p>
