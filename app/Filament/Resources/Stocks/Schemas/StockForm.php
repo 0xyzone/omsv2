@@ -37,6 +37,7 @@ class StockForm
                                 ->schema([
                                     Select::make('material_id')
                                         ->relationship('material', 'name')
+                                        ->disabledOn('edit')
                                         ->searchable()
                                         ->preload()
                                         ->required()
