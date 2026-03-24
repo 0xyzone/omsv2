@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderForm
 {
@@ -164,7 +165,11 @@ class OrderForm
                                         Grid::make(3)
                                             ->schema([
                                                 Select::make('product_id')
-                                                    ->relationship('product', 'name')
+                                                    ->relationship(
+                                                        name: 'product',
+                                                        titleAttribute: 'name',
+                                                        modifyQueryUsing: fn (Builder $query) => $query->where('is_active', true)
+                                                    )
                                                     ->searchable()
                                                     ->preload()
                                                     ->reactive()

@@ -14,6 +14,8 @@ class StocksTable
     {
         return $table
             ->columns([
+                textColumn::make('id')
+                    ->searchable(),
                 ImageColumn::make('image_path'),
                 TextColumn::make('date')
                     ->date()
