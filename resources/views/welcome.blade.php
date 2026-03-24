@@ -6,6 +6,15 @@
     <title>OMS | Management Portal</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    @php
+        use App\Models\Company;
+        $company = Company::first();
+        if($company && $company->logo_path) {
+            $faviconUrl = asset('storage/' . $company->logo_path);
+        }
+    @endphp
+    <link rel="shortcut icon" href="{{ $faviconUrl ?? "" }}" type="image/x-icon">
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>

@@ -6,6 +6,7 @@ use Andreia\FilamentUiSwitcher\FilamentUiSwitcherPlugin;
 use App\Http\Middleware\CheckUserStatus;
 use App\Livewire\LatestOrders;
 use App\Livewire\StatsOverview;
+use App\Models\Company;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use Filament\Actions\Action;
@@ -43,6 +44,12 @@ class MukhiyaPanelProvider extends PanelProvider
             ->passwordReset()
             ->path('mukhiya')
             ->viteTheme('resources/css/filament/mukhiya/theme.css')
+            ->favicon(function() {
+                $company = Company::first();
+                if ($company && $company->logo_path) {
+                    return asset('storage/' . $company->logo_path);
+                }
+            })
             ->sidebarCollapsibleOnDesktop()
             ->maxContentWidth(Width::Full)
             ->login()
