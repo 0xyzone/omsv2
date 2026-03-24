@@ -15,7 +15,7 @@ class StatsOverview extends StatsOverviewWidget
     {
         $totalOrders = \App\Models\Order::count();
         $totalRevenue = \App\Models\OrderPayment::sum('amount');
-        $totalExpenses = \App\Models\ExpenseRecordItem::where('status', 'finalized')->sum('total');
+        $totalExpenses = \App\Models\ExpenseRecord::where('status', 'finalized')->sum('final_amount');
         return [
             Stat::make('Total Orders', $totalOrders)
                 ->description($this->calcOrdersDescriptionPercentage()),
@@ -58,8 +58,8 @@ class StatsOverview extends StatsOverviewWidget
     {
         $previousDate = now()->subWeek();
         $today = now();
-        $previousExpenses = \App\Models\ExpenseRecordItem::whereBetween('created_at', [$previousDate, $today])->sum('total');
-        $currentExpenses = \App\Models\ExpenseRecordItem::whereBetween('created_at', [now()->subWeek(), now()])->sum('total');
+        $previousExpenses = \App\Models\ExpenseRecord::whereBetween('created_at', [$previousDate, $today])->where('status', 'finalized')->sum('final_amount');
+        $currentExpenses = \App\Models\ExpenseRecord::whereBetween('created_at', [now()->subWeek(), now()])->where('status', 'finalized')->sum('final_amount');
         if ($previousExpenses == 0) {
             return 'N/A';
         }
