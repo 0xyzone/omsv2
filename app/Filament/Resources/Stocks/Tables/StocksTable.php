@@ -33,6 +33,9 @@ class StocksTable
                     ->extraAttributes([
                         'class' => 'capitalize',
                     ]),
+                TextColumn::make('notes')
+                    ->lineClamp(2)
+                    ->tooltip(fn($record) => $record->notes),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -46,7 +49,7 @@ class StocksTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 // BulkActionGroup::make([
