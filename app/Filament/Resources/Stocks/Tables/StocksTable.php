@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Stocks\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -32,9 +34,10 @@ class StocksTable
                     ->color(fn(string $state): string => match ($state) {
                         'add' => 'success',
                         'subtract' => 'danger',
-                        default => 'secondary',
+                        default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state, $record) => $record->type === 'subtract' && $record->is_damaged ? 'Damaged' : ucfirst($state))
+                    ->getStateUsing(fn($record) => $record->type === 'subtract' && $record->is_damaged === 'true' ? 'damaged' : $record->type)
+                    ->formatStateUsing(fn(string $state, $record) => $record->type === 'subtract' && $record->is_damaged === 'true' ? 'Damaged' : ($record->type === 'add' ? 'Stock-In' : ($record->type === 'subtract' ? 'Stock-Out' : ucfirst($state))))
                     ->extraAttributes([
                         'class' => 'capitalize',
                     ]),
@@ -56,6 +59,25 @@ class StocksTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('delete')
+                    ->label('Delete')
+                    ->action(function ($record) {
+                        $material = $record->material;
+                        if ($record->type === 'add') {
+                            $material->decrement('stock_quantity', $record->quantity);
+                        } elseif ($record->type === 'subtract') {
+                            $material->increment('stock_quantity', $record->quantity);
+                        }
+                        $record->delete();
+                        Notification::make()
+                            ->title('Stock record deleted')
+                            ->body('The stock record has been successfully deleted and the material quantity has been adjusted accordingly.')
+                            ->success()
+                            ->send();
+                    })
+                    ->icon('heroicon-m-trash')
+                    ->requiresConfirmation()
+                    ->color('danger'),
             ])
             ->toolbarActions([
                 // BulkActionGroup::make([

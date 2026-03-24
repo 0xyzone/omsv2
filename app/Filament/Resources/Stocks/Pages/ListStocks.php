@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\Stocks\Pages;
 
+use App\Filament\Resources\Stocks\StockResource;
 use App\Models\Material;
 use Filament\Actions\CreateAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use App\Filament\Resources\Stocks\StockResource;
 
 class ListStocks extends ListRecords
 {
@@ -15,6 +16,14 @@ class ListStocks extends ListRecords
     {
         return [
             CreateAction::make()
+                ->successNotification(
+                    fn($record) =>
+                    Notification::make()
+                        ->success()
+                        ->title($record->type === 'add'
+                            ? $record->material->name . '\'s stock has been increased by ' . $record->quantity
+                            : $record->material->name . '\'s stock has been decreased by ' . $record->quantity)
+                )
                 ->after(function ($record) {
                     // $record is the newly created Stock model instance
                     $material = Material::find($record->material_id);
