@@ -19,7 +19,7 @@ class ExpenseCategoriesTable
                 TextColumn::make('expense_items.name')
                     ->badge()
                     ->listWithLineBreaks()
-                    ->limitList(3)
+                    ->limitList(2)
                     ->expandableLimitedList()
                     ->color('primary'),
                 TextColumn::make('total_quantity')
