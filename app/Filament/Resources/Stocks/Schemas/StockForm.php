@@ -59,6 +59,7 @@ class StockForm
 
                                     Select::make('type')
                                         ->label('Transaction Type')
+                                        ->disabledOn('edit')
                                         ->options([
                                             'add' => 'Stock In (Add)',
                                             'subtract' => 'Stock Out (Subtract)',
@@ -71,6 +72,7 @@ class StockForm
 
                                     TextInput::make('quantity')
                                         ->label('Quantity Amount')
+                                        ->disabledOn('edit')
                                         ->required()
                                         ->numeric()
                                         ->minValue(1)
