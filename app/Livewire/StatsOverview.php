@@ -15,7 +15,7 @@ class StatsOverview extends StatsOverviewWidget
     {
         $totalOrders = \App\Models\Order::count();
         $totalRevenue = \App\Models\OrderPayment::sum('amount');
-        $totalExpenses = \App\Models\ExpenseRecordItem::sum('total');
+        $totalExpenses = \App\Models\ExpenseRecordItem::where('status', 'finalized')->sum('total');
         return [
             Stat::make('Total Orders', $totalOrders)
                 ->description($this->calcOrdersDescriptionPercentage()),
