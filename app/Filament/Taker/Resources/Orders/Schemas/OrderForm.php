@@ -168,12 +168,15 @@ class OrderForm
                                                     ->relationship(
                                                         name: 'product',
                                                         titleAttribute: 'name',
-                                                        modifyQueryUsing: fn (Builder $query) => $query->where('is_active', true)
                                                     )
                                                     ->searchable()
                                                     ->preload()
                                                     ->reactive()
                                                     ->required()
+                                                    ->disableOptionWhen(function (string $value) {
+                                                        $product = Product::find($value);
+                                                        return $product && $product->is_active != true;
+                                                    })
                                                     ->afterStateUpdated(function (Get $get, Set $set, $state) {
                                                         $product = Product::find($state);
                                                         if ($product) {
