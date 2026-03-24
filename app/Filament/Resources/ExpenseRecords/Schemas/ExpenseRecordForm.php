@@ -23,6 +23,7 @@ class ExpenseRecordForm
                 DatePicker::make('expense_date')
                     ->label('Expense Date')
                     ->required()
+                    ->native(false)
                     ->default(now()),
                 Select::make('status')
                     ->required()
