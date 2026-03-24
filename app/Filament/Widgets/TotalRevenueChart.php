@@ -123,14 +123,14 @@ class TotalRevenueChart extends ApexChartWidget
             yaxis: {
                 labels: {
                     formatter: function (val) {
-                        return '$' + val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                        return 'रु ' + val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                     }
                 }
             },
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return '$' + val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                        return 'रु ' + val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                     }
                 }
             },
