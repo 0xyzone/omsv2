@@ -25,7 +25,8 @@ class ExpenseRecordsTable
                         'confirmed' => 'Confirmed',
                         'under-revision' => 'Under Revision',
                         'finalized' => 'Finalized'
-                    ]),
+                    ])
+                    ->disablePlaceholderSelection(),
                 TextColumn::make('total_amount')
                     ->numeric()
                     ->sortable(),
