@@ -2,13 +2,15 @@
 
 namespace App\Filament\Resources\ExpenseRecords\Schemas;
 
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 
 class ExpenseRecordForm
 {
@@ -18,6 +20,10 @@ class ExpenseRecordForm
             ->components([
                 Hidden::make('user_id')
                     ->default(auth()->id()),
+                DatePicker::make('expense_date')
+                    ->label('Expense Date')
+                    ->required()
+                    ->default(now()),
                 Select::make('status')
                     ->required()
                     ->options([
@@ -63,6 +69,13 @@ class ExpenseRecordForm
                     ->numeric()
                     ->disabled()
                     ->dehydrated(),
+                FileUpload::make('image_path')
+                    ->label('Reference Image')
+                    ->image()
+                    ->imageEditor()
+                    ->directory('expense-records')
+                    ->disk('public')
+                    ->visibility('public'),
 
                 Repeater::make('expense_record_items')
                     ->relationship()
