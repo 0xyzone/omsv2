@@ -54,18 +54,18 @@ class TotalExpenseChart extends ApexChartWidget
             ->where('status', 'finalized')
             ->select([
                 DB::raw('SUM(final_amount) as total'),
-                DB::raw("DATE_FORMAT(created_at, '%b') as month_name"),
-                DB::raw("MONTH(created_at) as month_num"),
-                DB::raw("YEAR(created_at) as year_num")
+                DB::raw("DATE_FORMAT(expense_date, '%b') as month_name"),
+                DB::raw("MONTH(expense_date) as month_num"),
+                DB::raw("YEAR(expense_date) as year_num")
             ]);
 
-        // Apply time filters based on created_at
+        // Apply time filters based on expense_date
         if ($activeFilter === 'this_year') {
-            $query->whereYear('created_at', now()->year);
+            $query->whereYear('expense_date', now()->year);
         } elseif ($activeFilter === 'last_year') {
-            $query->whereYear('created_at', now()->subYear()->year);
+            $query->whereYear('expense_date', now()->subYear()->year);
         } elseif ($activeFilter === 'last_6_months') {
-            $query->where('created_at', '>=', now()->subMonths(6));
+            $query->where('expense_date', '>=', now()->subMonths(6));
         }
 
         $data = $query->groupBy('year_num', 'month_num', 'month_name')
