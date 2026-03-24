@@ -16,6 +16,12 @@ class ExpenseCategoriesTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('expense_items.name')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->color('primary'),
                 TextColumn::make('total_quantity')
                     ->numeric()
                     ->getStateUsing(fn($record) => $record->expense_record_items()->sum('quantity'))
