@@ -34,7 +34,7 @@ class StocksTable
                         'subtract' => 'danger',
                         default => 'secondary',
                     })
-                    ->formatStateUsing(fn(string $state, $record) => $record->is_damaged ? 'Damaged' : ucfirst($state))
+                    ->formatStateUsing(fn(string $state, $record) => $record->type === 'subtract' && $record->is_damaged ? 'Damaged' : ucfirst($state))
                     ->extraAttributes([
                         'class' => 'capitalize',
                     ]),

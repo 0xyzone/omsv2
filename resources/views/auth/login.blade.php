@@ -22,7 +22,7 @@
                         <label class="text-slate-900 text-[13px] font-medium block mb-2">Email</label>
                         <div class="relative flex items-center">
                             <input name="email" type="text" required class="w-full text-slate-900 text-sm border-b border-slate-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none" placeholder="Enter email" />
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-2" viewBox="0 0 682.667 682.667">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-4.5 h-4.5 absolute right-2" viewBox="0 0 682.667 682.667">
                                 <defs>
                                     <clipPath id="a" clipPathUnits="userSpaceOnUse">
                                         <path d="M0 512h512V0H0Z" data-original="#000000"></path>
@@ -96,7 +96,7 @@
             </div>
 
             <div class="w-full h-full flex items-center bg-[#000842] rounded-xl p-8">
-                <img src="https://readymadeui.com/signin-image.webp" class="w-full aspect-[12/12] object-contain" alt="login-image" />
+                <img src="https://readymadeui.com/signin-image.webp" class="w-full aspect-12/12 object-contain" alt="login-image" />
             </div>
         </div>
     </div>
