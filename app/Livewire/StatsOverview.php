@@ -17,7 +17,12 @@ class StatsOverview extends StatsOverviewWidget
         $totalOrders = \App\Models\Order::count();
         $totalRevenue = \App\Models\OrderPayment::sum('amount');
         $totalExpenses = \App\Models\ExpenseRecord::where('status', 'finalized')->sum('final_amount');
+        $bestSellingProduct = \App\Models\OrderItem::select('product_id', \DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_quantity')
+            ->first();
         return [
+            Stat::make('Best Selling Product', $bestSellingProduct ? $bestSellingProduct->product->name : 'N/A'),
             Stat::make('Total Orders', $totalOrders)
                 ->description($this->calcOrdersDescriptionPercentage()),
             Stat::make('Total Revenue', 'रु ' . number_format($totalRevenue, 2))
