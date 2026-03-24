@@ -18,11 +18,11 @@ class ExpenseCategoriesTable
                     ->searchable(),
                 TextColumn::make('total_quantity')
                     ->numeric()
-                    ->getStateUsing(fn($record) => $record->expense_items()->sum('quantity'))
+                    ->getStateUsing(fn($record) => $record->expense_items()->expense_record_items()->sum('quantity'))
                     ->sortable(),
                 TextColumn::make('total_amount')
                     ->numeric()
-                    ->getStateUsing(fn($record) => $record->expense_items()->sum('total'))
+                    ->getStateUsing(fn($record) => $record->expense_items()->expense_record_items()->sum('total'))
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
