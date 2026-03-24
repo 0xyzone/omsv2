@@ -15,15 +15,26 @@ class MaterialsTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 ImageColumn::make('image_path')
-                ->label('Image')
-                ->imageGallery()
-                ->circular(),
+                    ->label('Image')
+                    ->imageGallery()
+                    ->circular(),
                 TextColumn::make('name')
-                ->searchable(),
+                    ->searchable(),
                 TextColumn::make('stock_quantity')
+                    ->label('Current Stock')
                     ->numeric()
                     ->sortable()
                     ->getStateUsing(fn($record) => $record->stock_quantity . ' ' . $record->unit_of_measure),
+                    TextColumn::make('damaged_stock')
+                    ->label('Damaged Stock')
+                    ->numeric()
+                    ->sortable()
+                    ->getStateUsing(function ($record) {
+                        $damagedStock = $record->stocks()
+                            ->where('is_damaged', 'true')
+                            ->sum('quantity');
+                        return $damagedStock . ' ' . $record->unit_of_measure;
+                    }),
                 // TextColumn::make('unit_of_measure')
                 //     ->searchable(),
                 // TextColumn::make('cost_per_unit')
