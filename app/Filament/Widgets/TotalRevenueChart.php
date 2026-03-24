@@ -9,7 +9,7 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class TotalRevenueChart extends ApexChartWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 2;
     protected static ?string $chartId = 'totalRevenueChart';
     protected static ?string $heading = 'Total Revenue Chart';
 
