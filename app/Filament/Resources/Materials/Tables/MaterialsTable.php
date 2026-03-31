@@ -24,9 +24,19 @@ class MaterialsTable
                     ->label('Current Stock')
                     ->numeric()
                     ->getStateUsing(fn($record) => $record->stock_quantity . ' ' . $record->unit_of_measure),
-                    TextColumn::make('damaged_stock')
+                TextColumn::make('damaged_stock')
                     ->label('Damaged Stock')
-                    ->numeric()
+                    // 1. Tell Filament how to sort this "virtual" column
+                    ->sortable(query: function ($query, $direction) {
+                        return $query->orderBy(
+                            // Subquery to calculate the sum for sorting
+                            \App\Models\Stock::selectRaw('sum(quantity)')
+                                ->whereColumn('material_id', 'materials.id') // Adjust foreign/local keys as needed
+                                ->where('is_damaged', 'true'),
+                            $direction
+                        );
+                    })
+                    // 2. Keep your display logic (or use the subquery value for performance)
                     ->getStateUsing(function ($record) {
                         $damagedStock = $record->stocks()
                             ->where('is_damaged', 'true')
