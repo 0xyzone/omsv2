@@ -3,7 +3,6 @@
 namespace App\Filament\Taker\Resources\Orders;
 
 use App\Filament\Taker\Resources\Orders\Pages\CreateOrder;
-use App\Filament\Taker\Resources\Orders\Pages\EditOrder;
 use App\Filament\Taker\Resources\Orders\Pages\ListOrders;
 use App\Filament\Taker\Resources\Orders\Schemas\OrderForm;
 use App\Filament\Taker\Resources\Orders\Tables\OrdersTable;

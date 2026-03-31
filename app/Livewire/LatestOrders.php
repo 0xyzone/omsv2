@@ -24,40 +24,30 @@ class LatestOrders extends TableWidget
                     ->searchable(),
                 TextColumn::make('customer_name')
                     ->searchable(),
-                TextColumn::make('customer_phone')
-                    ->sortable(),
-                TextColumn::make('customer_alt_phone')
-                    ->sortable(),
+                TextColumn::make('customer_phone'),
+                TextColumn::make('customer_alt_phone'),
                 TextColumn::make('status')
                     ->badge()
                     ->searchable(),
                 TextColumn::make('total_amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 TextColumn::make('customization_amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 TextColumn::make('discount_type')
                     ->searchable(),
                 TextColumn::make('discount_value')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 TextColumn::make('discount_amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 TextColumn::make('delivery_charge')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 TextColumn::make('final_amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at', 'desc')
