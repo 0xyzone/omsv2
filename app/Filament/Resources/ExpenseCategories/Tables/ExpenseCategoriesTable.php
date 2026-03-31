@@ -25,12 +25,10 @@ class ExpenseCategoriesTable
                     ->color('primary'),
                 TextColumn::make('total_quantity')
                     ->numeric()
-                    ->getStateUsing(fn($record) => $record->expense_record_items()->sum('quantity'))
-                    ->sortable(),
+                    ->getStateUsing(fn($record) => $record->expense_record_items()->sum('quantity')),
                 TextColumn::make('total_amount')
                     ->numeric()
-                    ->getStateUsing(fn($record) => $record->expense_record_items()->sum('total'))
-                    ->sortable(),
+                    ->getStateUsing(fn($record) => $record->expense_record_items()->sum('total')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -16,7 +16,7 @@ class LatestOrders extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn(): Builder => Order::query()->orderBy('id', 'desc'))
+            ->query(fn(): Builder => Order::query()->latest())
             ->columns([
                 TextColumn::make('id')
                     ->searchable(),
@@ -60,6 +60,7 @@ class LatestOrders extends TableWidget
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
