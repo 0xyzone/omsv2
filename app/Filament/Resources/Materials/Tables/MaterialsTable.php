@@ -23,12 +23,10 @@ class MaterialsTable
                 TextColumn::make('stock_quantity')
                     ->label('Current Stock')
                     ->numeric()
-                    ->sortable()
                     ->getStateUsing(fn($record) => $record->stock_quantity . ' ' . $record->unit_of_measure),
                     TextColumn::make('damaged_stock')
                     ->label('Damaged Stock')
                     ->numeric()
-                    ->sortable()
                     ->getStateUsing(function ($record) {
                         $damagedStock = $record->stocks()
                             ->where('is_damaged', 'true')
