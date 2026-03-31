@@ -23,7 +23,8 @@ class MaterialsTable
                 TextColumn::make('stock_quantity')
                     ->label('Current Stock')
                     ->numeric()
-                    ->getStateUsing(fn($record) => $record->stock_quantity . ' ' . $record->unit_of_measure),
+                    ->getStateUsing(fn($record) => $record->stock_quantity . ' ' . $record->unit_of_measure)
+                    ->sortable(),
                 TextColumn::make('damaged_stock')
                     ->label('Damaged Stock')
                     // 1. Tell Filament how to sort this "virtual" column
