@@ -30,10 +30,10 @@ class LatestOrders extends TableWidget
                     ->badge()
                     ->color(fn($state) => match ($state) {
                         'pending' => 'warning',
-                        'confirmed' => 'success',
+                        'completed' => 'success',
                         'under-revision' => 'primary',
                         'finalized' => 'secondary',
-                        default => null,
+                        default => 'gray',
                     }),
                 TextColumn::make('total_amount')
                     ->numeric(),
