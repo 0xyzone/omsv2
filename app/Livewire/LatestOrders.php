@@ -28,7 +28,13 @@ class LatestOrders extends TableWidget
                 TextColumn::make('customer_alt_phone'),
                 TextColumn::make('status')
                     ->badge()
-                    ->searchable(),
+                    ->color(fn($state) => match ($state) {
+                        'pending' => 'warning',
+                        'confirmed' => 'success',
+                        'under-revision' => 'primary',
+                        'finalized' => 'secondary',
+                        default => null,
+                    }),
                 TextColumn::make('total_amount')
                     ->numeric(),
                 TextColumn::make('customization_amount')
