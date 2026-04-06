@@ -17,3 +17,6 @@ Route::get('/suspended', function () {
 })->name('suspended.notice');
 
 Route::post('/custom-logout', [LogoutController::class, 'logout'])->name('custom.logout');
+Route::get('/demo', function () {
+    return view('errors.415');
+})->name('demo');
